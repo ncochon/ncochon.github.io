@@ -100,39 +100,52 @@
         }
 
         /**
-         * Shows basic usage of the Apps Script API.
-         *
-         * Call the Apps Script API to create a new script project, upload files
-         * to the project, and log the script's URL to the user.
-         */
-        function callAppsScript() {
-            gapi.client.script.projects.create({
-                resource: {
-                    title: 'My Script'
+        * Load the API and make an API call.  Display the results on the screen.
+        */
+        function callScriptFunction() {
+            var scriptId = "MfkanVTlOKHeJ0fRWyeomzNJoCwTMzo-q";
+
+            // Call the Apps Script API run method
+            //   'scriptId' is the URL parameter that states what script to run
+            //   'resource' describes the run request body (with the function name
+            //              to execute)
+            gapi.client.script.scripts.run({
+                'scriptId': scriptId,
+                'resource': {
+                    'function': 'myFunction'
                 }
-            }).then((resp) => {
-                return gapi.client.script.projects.updateContent({
-                    scriptId: resp.result.scriptId,
-                    resource: {
-                        files: [{
-                            name: 'hello',
-                            type: 'SERVER_JS',
-                            source: 'function helloWorld() {\n  console.log("Hello, world!");\n}'
-                        }, {
-                            name: 'appsscript',
-                            type: 'JSON',
-                            source: "{\"timeZone\":\"America/New_York\",\"" +
-                                "exceptionLogging\":\"CLOUD\"}"
-                        }]
+            }).then(function (resp) {
+                var result = resp.result;
+                if (result.error && result.error.status) {
+                    // The API encountered a problem before the script
+                    // started executing.
+                    appendPre('Error calling API:');
+                    appendPre(JSON.stringify(result, null, 2));
+                } else if (result.error) {
+                    // The API executed, but the script returned an error.
+
+                    // Extract the first (and only) set of error details.
+                    // The values of this object are the script's 'errorMessage' and
+                    // 'errorType', and an array of stack trace elements.
+                    var error = result.error.details[0];
+                    appendPre('Script error message: ' + error.errorMessage);
+
+                    if (error.scriptStackTraceElements) {
+                        // There may not be a stacktrace if the script didn't start
+                        // executing.
+                        appendPre('Script error stacktrace:');
+                        for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+                            var trace = error.scriptStackTraceElements[i];
+                            appendPre('\t' + trace.function + ':' + trace.lineNumber);
+                        }
                     }
-                });
-            }).then((resp) => {
-                let result = resp.result;
-                if (result.error) throw result.error;
-                console.log(`https://script.google.com/d/${result.scriptId}/edit`);
-            }).catch((error) => {
-                // The API encountered a problem.
-                return console.log(`The API returned an error: ${error}`);
+                } else {
+                    // The structure of the result will depend upon what the Apps
+                    // Script function returns. 
+
+                    var resultat = result.response.result;
+                    appendPre(resultat);
+                }
             });
         }
 
