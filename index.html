@@ -143,7 +143,7 @@
                     // The structure of the result will depend upon what the Apps
                     // Script function returns. 
 
-                    var resultat = result.response;//.result;
+                    var folderSet = result.response;//.result;
                     Object.keys(folderSet).forEach(function (id) {
                         appendPre('\t' + folderSet[id] + ' (' + id + ')');
                     });
