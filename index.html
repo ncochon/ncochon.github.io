@@ -15,8 +15,8 @@
 
     <script type="text/javascript">
         // Client ID and API key from the Developer Console
-        var CLIENT_ID = '599122134244-v9iqqj57pkksalhte7675rdrdd3paj2d.apps.googleusercontent.com';
-        var API_KEY = 'AIzaSyCjW5BXWZli5D37SdYeONmb9I6NPgiQyjs';
+        var CLIENT_ID = '470606754397-1kirsg9jfpbn6o3po81kb9nk9o42n35s.apps.googleusercontent.com';
+        var API_KEY = 'AIzaSyB_tnmlKQNbz9z8u8AiHgnEo7h0o5pTkiY';
 
         // Array of API discovery doc URLs for APIs used by the quickstart
         var DISCOVERY_DOCS = ["https://script.googleapis.com/$discovery/rest?version=v1"];
@@ -103,7 +103,7 @@
         * Load the API and make an API call.  Display the results on the screen.
         */
         function callScriptFunction() {
-            var scriptId = "MfkanVTlOKHeJ0fRWyeomzNJoCwTMzo-q";
+            var scriptId = "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW";
 
             // Call the Apps Script API run method
             //   'scriptId' is the URL parameter that states what script to run
@@ -113,7 +113,7 @@
                 scriptId: scriptId,
                 resource: {
                     function: 'myFunction',
-                    parameters: ['coucou'],
+                    parameters: [],
                     devMode: true,
                 }
             }).then(function (resp) {
@@ -144,7 +144,6 @@
                 } else {
                     // The structure of the result will depend upon what the Apps
                     // Script function returns.
-
                     var result = result.response.result;
                     Object.keys(result).forEach(function (id) {
                         appendPre('\t' + result[id] + ' (' + id + ')');
