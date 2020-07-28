@@ -11,6 +11,10 @@
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
 
+    <select id="cboClient">
+        <option></option>
+    </select>
+
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script type="text/javascript">
@@ -27,7 +31,7 @@
 
         var authorizeButton = document.getElementById('authorize_button');
         var signoutButton = document.getElementById('signout_button');
-
+        
         /**
          *  On load, called to load the auth2 library and API client library.
          */
@@ -66,7 +70,7 @@
             if (isSignedIn) {
                 authorizeButton.style.display = 'none';
                 signoutButton.style.display = 'block';
-                callScriptFunction();
+                getClientsAFacturer();
             } else {
                 authorizeButton.style.display = 'block';
                 signoutButton.style.display = 'none';
@@ -102,7 +106,7 @@
         /**
         * Load the API and make an API call.  Display the results on the screen.
         */
-        function callScriptFunction() {
+        function getClientsAFacturer() {
             var scriptId = "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW";
 
             // Call the Apps Script API run method
@@ -145,9 +149,19 @@
                     // The structure of the result will depend upon what the Apps
                     // Script function returns.
                     var result = result.response.result;
-                    Object.keys(result).forEach(function (id) {
-                        appendPre('\t' + result[id] + ' (' + id + ')');
-                    });
+                    if (result != null && result.length > 0) {
+                        var cboClient = document.getElementById('cboClient');
+
+                        result.forEach(x => {
+                            var option = document.createElement("option");
+                            option.text = x;
+                            option.value = x;
+                            cboClient.appendChild(option);
+                        });
+                    }
+                    //Object.keys(result).forEach(function (id) {
+                    //    appendPre('\t' + result[id] + ' (' + id + ')');
+                    //});
                 }
             });
         }
