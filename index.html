@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <title>Google Apps Script API Quickstart</title>
@@ -76,14 +76,14 @@
         /**
          *  Sign in the user upon button click.
          */
-        function handleAuthClick(event) {
+        function handleAuthClick() {
             gapi.auth2.getAuthInstance().signIn();
         }
 
         /**
          *  Sign out the user upon button click.
          */
-        function handleSignoutClick(event) {
+        function handleSignoutClick() {
             gapi.auth2.getAuthInstance().signOut();
         }
 
@@ -110,9 +110,10 @@
             //   'resource' describes the run request body (with the function name
             //              to execute)
             gapi.client.script.scripts.run({
-                'scriptId': scriptId,
-                'resource': {
-                    'function': 'myFunction'
+                scriptId: scriptId,
+                resource: {
+                    function: 'myFunction',
+                    devMode: true,
                 }
             }).then(function (resp) {
                 var result = resp.result;
@@ -141,11 +142,11 @@
                     }
                 } else {
                     // The structure of the result will depend upon what the Apps
-                    // Script function returns. 
+                    // Script function returns.
 
-                    var folderSet = result.response;//.result;
-                    Object.keys(folderSet).forEach(function (id) {
-                        appendPre('\t' + folderSet[id] + ' (' + id + ')');
+                    var result = result.response.result;
+                    Object.keys(result).forEach(function (id) {
+                        appendPre('\t' + result[id] + ' (' + id + ')');
                     });
                 }
             });
