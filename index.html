@@ -8,7 +8,7 @@
     <p>Facturation des cours de violon</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
-    <!--<button id="authorize_button" style="display: none;">Authorize</button>-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
 
     <select id="cboClient">
@@ -29,7 +29,7 @@
         // included, separated by spaces.
         var SCOPES = 'https://www.googleapis.com/auth/script.projects https://www.googleapis.com/auth/spreadsheets';
 
-        //var authorizeButton = document.getElementById('authorize_button');
+        var authorizeButton = document.getElementById('authorize_button');
         var signoutButton = document.getElementById('signout_button');
         
         /**
@@ -55,7 +55,7 @@
 
                 // Handle the initial sign-in state.
                 updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                //authorizeButton.onclick = handleAuthClick;
+                authorizeButton.onclick = handleAuthClick;
                 signoutButton.onclick = handleSignoutClick;
             }, function (error) {
                 appendPre(JSON.stringify(error, null, 2));
@@ -68,22 +68,21 @@
          */
         function updateSigninStatus(isSignedIn) {
             if (isSignedIn) {
-                //authorizeButton.style.display = 'none';
+                authorizeButton.style.display = 'none';
                 signoutButton.style.display = 'block';
                 getClientsAFacturer();
             } else {
-                //authorizeButton.style.display = 'block';
+                authorizeButton.style.display = 'block';
                 signoutButton.style.display = 'none';
-                gapi.auth2.getAuthInstance().signIn();
             }
         }
 
         /**
          *  Sign in the user upon button click.
          */
-        //function handleAuthClick() {
-        //    gapi.auth2.getAuthInstance().signIn();
-        //}
+        function handleAuthClick() {
+            gapi.auth2.getAuthInstance().signIn();
+        }
 
         /**
          *  Sign out the user upon button click.
@@ -102,6 +101,10 @@
             var pre = document.getElementById('content');
             var textContent = document.createTextNode(message + '\n');
             pre.appendChild(textContent);
+        }
+
+        function cboClientChangeHandler(event) {
+            alert("!");
         }
 
         /**
@@ -152,6 +155,7 @@
                     var result = result.response.result;
                     if (result != null && result.length > 0) {
                         var cboClient = document.getElementById('cboClient');
+                        cboClient.addEventListener("change", cboClientChangeHandler);
 
                         result.forEach(x => {
                             var option = document.createElement("option");
@@ -166,7 +170,6 @@
                 }
             });
         }
-
     </script>
 
     <script async defer src="https://apis.google.com/js/api.js"
