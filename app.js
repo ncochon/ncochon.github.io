@@ -51,7 +51,7 @@ function updateSigninStatus(isSignedIn) {
 	if (isSignedIn) {
 		authorizeButton.style.display = 'none';
 		signoutButton.style.display = 'block';
-		displayClients();
+		afficheClients();
 	} else {
 		authorizeButton.style.display = 'block';
 		signoutButton.style.display = 'none';
@@ -85,25 +85,19 @@ function appendPre(message) {
 	pre.appendChild(textContent);
 }
 
-function cboClientChangeHandler(event) {
-	alert("!");
-}
-
 /**
 * Load the API and make an API call.  Display the results on the screen.
 */
-function getClientsAFacturer(returnValue) {
-	var scriptId = "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW";
-
+function callScriptFunction(functionName, parameters, returnValue) {
 	// Call the Apps Script API run method
 	//   'scriptId' is the URL parameter that states what script to run
 	//   'resource' describes the run request body (with the function name
 	//              to execute)
 	return gapi.client.script.scripts.run({
-		scriptId: scriptId,
+		scriptId: "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW",
 		resource: {
-			function: 'clientsAFacturer',
-			parameters: [],
+			function: functionName,
+			parameters: parameters,
 			devMode: true,
 		}
 	}).then(function (resp) {
@@ -139,16 +133,26 @@ function getClientsAFacturer(returnValue) {
 	});
 }
 
-function displayClients() {
+//Retourne la liste des clients à facturer
+function getClientsAFacturer(returnValue) {
+	return callScriptFunction('clientsAFacturer', [], returnValue);
+}
+
+//Retourne la liste des cours à facturer pour le client
+function getCoursAFacturer(client, returnValue) {
+	return callScriptFunction('coursAFacturer', [client], returnValue);
+}
+
+//Affiche la liste des clients à facturer
+function afficheClients() {
 	var returnValue = { value: null };
-	getClientsAFacturer(returnValue).then(x => {
+	getClientsAFacturer(returnValue).then(() => {
 		var clients = returnValue.value;
 
 		if (clients != null && clients.length > 0) {
 			clients.forEach(x => {
 				var option = document.createElement("option");
 				option.text = x;
-				option.value = x;
 				cboClient.appendChild(option);
 			});
 
@@ -157,4 +161,12 @@ function displayClients() {
 			cboClient.style.display = 'block';
 		}
 	});
+}
+
+function cboClientChangeHandler(e) {
+	afficheCours(e.target.text);
+}
+
+function afficheCours(client) {
+	alert(client);
 }
