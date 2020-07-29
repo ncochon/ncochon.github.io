@@ -19,8 +19,8 @@ cboClient.addEventListener('change', cboClientChangeHandler);
 var divCours = document.getElementById('divCours');
 var ulCours = document.getElementById('ulCours');
 
-var btnFacture = document.getElementById('btnFacture');
-btnFacture.addEventListener('click', btnFactureClickHandler);
+var btnFacturer = document.getElementById('btnFacturer');
+btnFacturer.addEventListener('click', btnFacturerClickHandler);
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -136,9 +136,10 @@ function callScriptFunction(functionName, parameters, returnValue) {
 				}
 			}
 		} else {
-			// The structure of the result will depend upon what the Apps
-			// Script function returns.
-			returnValue.value = result.response.result;
+			// Returne la valeur de retour
+			if (returnValue != null) {
+				returnValue.value = result.response.result;
+			}
 		}
 	});
 }
@@ -153,27 +154,35 @@ function getCoursAFacturer(client, returnValue) {
 	return callScriptFunction('coursAFacturer', [client], returnValue);
 }
 
+function genereFacture(client) {
+	return callScriptFunction('genereFacture', [client]);
+}
+
 //Affiche la liste des clients à facturer
 function afficheClients() {
 	//vide la liste
 	while (cboClient.firstChild) {
 		cboClient.removeChild(cboClient.lastChild);
 	}
+	//Ajoute l'option vide
+	var option = document.createElement("option");
+	cboClient.appendChild(option);
 
 	var returnValue = { value: null };
-	getClientsAFacturer(returnValue).then(() => {
-		divClient.style.display = 'block';
+	getClientsAFacturer(returnValue)
+		.then(() => {
+			divClient.style.display = 'block';
 
-		var clients = returnValue.value;
+			var clients = returnValue.value;
 
-		if (clients != null && clients.length > 0) {
-			clients.forEach(x => {
-				var option = document.createElement("option");
-				option.text = x;
-				cboClient.appendChild(option);
-			});
-		}
-	});
+			if (clients != null && clients.length > 0) {
+				clients.forEach(x => {
+					option = document.createElement("option");
+					option.text = x;
+					cboClient.appendChild(option);
+				});
+			}
+		});
 }
 
 function cboClientChangeHandler(e) {
@@ -187,22 +196,26 @@ function afficheCours(client) {
 	}
 
 	var returnValue = { value: null };
-	getCoursAFacturer(client, returnValue).then(() => {
-		divCours.style.display = 'block';
+	getCoursAFacturer(client, returnValue)
+		.then(() => {
+			divCours.style.display = 'block';
 
-		var cours = returnValue.value;
+			var cours = returnValue.value;
 
-		if (cours != null && cours.length > 0) {
-			cours.forEach(x => {
-				var li = document.createElement("li");
-				var textNode = document.createTextNode(x);
-				li.appendChild(textNode);
-				ulCours.appendChild(li);
-			});
-		}
-	});
+			if (cours != null && cours.length > 0) {
+				cours.forEach(x => {
+					var li = document.createElement("li");
+					var textNode = document.createTextNode(x);
+					li.appendChild(textNode);
+					ulCours.appendChild(li);
+				});
+			}
+		});
 }
 
-function btnFactureClickHandler() {
-	alert("!");
+function btnFacturerClickHandler() {
+	genereFacture(client)
+		.then(() => {
+			appendPre("Génération OK");
+		});
 }
