@@ -173,7 +173,7 @@ function cboClientChangeHandler(e) {
 
 function afficheCours(client) {
 	var returnValue = { value: null };
-	getClientsAFacturer(returnValue).then(() => {
+	getCoursAFacturer(client, returnValue).then(() => {
 		divCours.style.display = 'block';
 
 		var cours = returnValue.value;
