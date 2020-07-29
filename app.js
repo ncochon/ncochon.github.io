@@ -156,8 +156,8 @@ function getCoursAFacturer(client, returnValue) {
 //Affiche la liste des clients à facturer
 function afficheClients() {
 	//vide la liste
-	while (divClient.firstChild) {
-		divClient.removeChild(divClient.lastChild);
+	while (cboClient.firstChild) {
+		cboClient.removeChild(cboClient.lastChild);
 	}
 
 	var returnValue = { value: null };
@@ -182,8 +182,8 @@ function cboClientChangeHandler(e) {
 
 function afficheCours(client) {
 	//vide la liste
-	while (divCours.firstChild) {
-		divCours.removeChild(divCours.lastChild);
+	while (ulCours.firstChild) {
+		ulCours.removeChild(ulCours.lastChild);
 	}
 
 	var returnValue = { value: null };
