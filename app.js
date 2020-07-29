@@ -13,8 +13,11 @@ var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
 var divClient = document.getElementById('divClient');
 var cboClient = document.getElementById('cboClient');
+cboClient.addEventListener('change', cboClientChangeHandler);
 var divCours = document.getElementById('divCours');
 var ulCours = document.getElementById('ulCours');
+var btnFacture = document.getElementById('btnFacture');
+btnFacture.addEventListener('click', btnFactureClickHandler);
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -161,8 +164,6 @@ function afficheClients() {
 				option.text = x;
 				cboClient.appendChild(option);
 			});
-
-			cboClient.addEventListener("change", cboClientChangeHandler);
 		}
 	});
 }
@@ -172,6 +173,11 @@ function cboClientChangeHandler(e) {
 }
 
 function afficheCours(client) {
+	//vide la liste
+	while (divCours.firstChild) {
+		divCours.removeChild(divCours.lastChild);
+	}
+
 	var returnValue = { value: null };
 	getCoursAFacturer(client, returnValue).then(() => {
 		divCours.style.display = 'block';
@@ -189,4 +195,8 @@ function afficheCours(client) {
 			cboClient.addEventListener("change", cboClientChangeHandler);
 		}
 	});
+}
+
+function btnFactureClickHandler() {
+	alert("!");
 }
