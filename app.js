@@ -11,6 +11,7 @@ var SCOPES = 'https://www.googleapis.com/auth/script.projects https://www.google
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+var cboClient = document.getElementById('cboClient');
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -50,10 +51,11 @@ function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
         signoutButton.style.display = 'block';
-        getClientsAFacturer();
+        displayClients();
     } else {
         authorizeButton.style.display = 'block';
         signoutButton.style.display = 'none';
+        cboClient.style.display = 'none';
     }
 }
 
@@ -141,8 +143,6 @@ function displayClients() {
     var clients = getClientsAFacturer();
 
     if (clients != null && clients.length > 0) {
-        var cboClient = document.getElementById('cboClient');
-
         clients.forEach(x => {
             var option = document.createElement("option");
             option.text = x;
@@ -151,5 +151,7 @@ function displayClients() {
         });
 
         cboClient.addEventListener("change", cboClientChangeHandler);
+
+        cboClient.style.display = 'block';
     }
 }
