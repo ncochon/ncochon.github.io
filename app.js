@@ -11,11 +11,14 @@ var SCOPES = 'https://www.googleapis.com/auth/script.projects https://www.google
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+
 var divClient = document.getElementById('divClient');
 var cboClient = document.getElementById('cboClient');
 cboClient.addEventListener('change', cboClientChangeHandler);
+
 var divCours = document.getElementById('divCours');
 var ulCours = document.getElementById('ulCours');
+
 var btnFacture = document.getElementById('btnFacture');
 btnFacture.addEventListener('click', btnFactureClickHandler);
 
@@ -152,6 +155,11 @@ function getCoursAFacturer(client, returnValue) {
 
 //Affiche la liste des clients à facturer
 function afficheClients() {
+	//vide la liste
+	while (divClient.firstChild) {
+		divClient.removeChild(divClient.lastChild);
+	}
+
 	var returnValue = { value: null };
 	getClientsAFacturer(returnValue).then(() => {
 		divClient.style.display = 'block';
@@ -191,8 +199,6 @@ function afficheCours(client) {
 				li.appendChild(textNode);
 				ulCours.appendChild(li);
 			});
-
-			cboClient.addEventListener("change", cboClientChangeHandler);
 		}
 	});
 }
