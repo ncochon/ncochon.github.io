@@ -154,8 +154,8 @@ function getCoursAFacturer(client, returnValue) {
 	return callScriptFunction('coursAFacturer', [client], returnValue);
 }
 
-function genereFacture(client) {
-	return callScriptFunction('genereFacture', [client]);
+function genereFacture(client, returnValue) {
+	return callScriptFunction('genereFacture', [client], returnValue);
 }
 
 //Affiche la liste des clients à facturer
@@ -215,8 +215,9 @@ function afficheCours(client) {
 
 function btnFacturerClickHandler() {
 	var client = cboClient.value;
-	genereFacture(client)
+	var returnValue = { value: null };
+	genereFacture(client, returnValue)
 		.then(() => {
-			appendPre("Génération OK");
+			appendPre("Création de la facture " + returnValue.value + " terminée");
 		});
 }
