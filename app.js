@@ -214,6 +214,7 @@ function afficheCours(client) {
 }
 
 function btnFacturerClickHandler() {
+	var client = cboClient.value;
 	genereFacture(client)
 		.then(() => {
 			appendPre("Génération OK");
