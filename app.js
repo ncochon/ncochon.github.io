@@ -11,7 +11,10 @@ var SCOPES = 'https://www.googleapis.com/auth/script.projects https://www.google
 
 var authorizeButton = document.getElementById('authorize_button');
 var signoutButton = document.getElementById('signout_button');
+var divClient = document.getElementById('divClient');
 var cboClient = document.getElementById('cboClient');
+var divCours = document.getElementById('divCours');
+var ulCours = document.getElementById('ulCours');
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -55,7 +58,8 @@ function updateSigninStatus(isSignedIn) {
 	} else {
 		authorizeButton.style.display = 'block';
 		signoutButton.style.display = 'none';
-		cboClient.style.display = 'none';
+		divClient.style.display = 'none';
+		divCours.style.display = 'none';
 	}
 }
 
@@ -147,6 +151,8 @@ function getCoursAFacturer(client, returnValue) {
 function afficheClients() {
 	var returnValue = { value: null };
 	getClientsAFacturer(returnValue).then(() => {
+		divClient.style.display = 'block';
+
 		var clients = returnValue.value;
 
 		if (clients != null && clients.length > 0) {
@@ -157,16 +163,30 @@ function afficheClients() {
 			});
 
 			cboClient.addEventListener("change", cboClientChangeHandler);
-
-			cboClient.style.display = 'block';
 		}
 	});
 }
 
 function cboClientChangeHandler(e) {
-	afficheCours(e.target.text);
+	afficheCours(e.target.value);
 }
 
 function afficheCours(client) {
-	alert(client);
+	var returnValue = { value: null };
+	getClientsAFacturer(returnValue).then(() => {
+		divCours.style.display = 'block';
+
+		var cours = returnValue.value;
+
+		if (cours != null && cours.length > 0) {
+			cours.forEach(x => {
+				var li = document.createElement("li");
+				var textNode = document.createTextNode(x);
+				li.appendChild(textNode);
+				ulCours.appendChild(li);
+			});
+
+			cboClient.addEventListener("change", cboClientChangeHandler);
+		}
+	});
 }

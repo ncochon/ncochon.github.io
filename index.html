@@ -11,10 +11,16 @@
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
 
-    <label for="cboClient">Client à facturer : </label>
-    <select id="cboClient" style="display: none;">
-        <option></option>
-    </select>
+    <div id="divClient" style="display: none;">
+        <label for="cboClient">Client à facturer : </label>
+        <select id="cboClient">
+            <option></option>
+        </select>
+    </div>
+    <div id="divCours" style="display: none;">
+        <label for="ulCours">Cours à facturer : </label>
+        <ul id="ulCours"></ul>
+    </div>
 
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
