@@ -17,7 +17,7 @@ var cboClient = document.getElementById('cboClient');
  *  On load, called to load the auth2 library and API client library.
  */
 function handleClientLoad() {
-    gapi.load('client:auth2', initClient);
+	gapi.load('client:auth2', initClient);
 }
 
 /**
@@ -25,22 +25,22 @@ function handleClientLoad() {
  *  listeners.
  */
 function initClient() {
-    gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
-    }).then(function () {
-        // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+	gapi.client.init({
+		apiKey: API_KEY,
+		clientId: CLIENT_ID,
+		discoveryDocs: DISCOVERY_DOCS,
+		scope: SCOPES
+	}).then(function () {
+		// Listen for sign-in state changes.
+		gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        authorizeButton.onclick = handleAuthClick;
-        signoutButton.onclick = handleSignoutClick;
-    }, function (error) {
-        appendPre(JSON.stringify(error, null, 2));
-    });
+		// Handle the initial sign-in state.
+		updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+		authorizeButton.onclick = handleAuthClick;
+		signoutButton.onclick = handleSignoutClick;
+	}, function (error) {
+		appendPre(JSON.stringify(error, null, 2));
+	});
 }
 
 /**
@@ -48,29 +48,29 @@ function initClient() {
  *  appropriately. After a sign-in, the API is called.
  */
 function updateSigninStatus(isSignedIn) {
-    if (isSignedIn) {
-        authorizeButton.style.display = 'none';
-        signoutButton.style.display = 'block';
-        displayClients();
-    } else {
-        authorizeButton.style.display = 'block';
-        signoutButton.style.display = 'none';
-        cboClient.style.display = 'none';
-    }
+	if (isSignedIn) {
+		authorizeButton.style.display = 'none';
+		signoutButton.style.display = 'block';
+		displayClients();
+	} else {
+		authorizeButton.style.display = 'block';
+		signoutButton.style.display = 'none';
+		cboClient.style.display = 'none';
+	}
 }
 
 /**
  *  Sign in the user upon button click.
  */
 function handleAuthClick() {
-    gapi.auth2.getAuthInstance().signIn();
+	gapi.auth2.getAuthInstance().signIn();
 }
 
 /**
  *  Sign out the user upon button click.
  */
 function handleSignoutClick() {
-    gapi.auth2.getAuthInstance().signOut();
+	gapi.auth2.getAuthInstance().signOut();
 }
 
 /**
@@ -80,78 +80,81 @@ function handleSignoutClick() {
  * @param {string} message Text to be placed in pre element.
  */
 function appendPre(message) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
-    pre.appendChild(textContent);
+	var pre = document.getElementById('content');
+	var textContent = document.createTextNode(message + '\n');
+	pre.appendChild(textContent);
 }
 
 function cboClientChangeHandler(event) {
-    alert("!");
+	alert("!");
 }
 
 /**
 * Load the API and make an API call.  Display the results on the screen.
 */
-function getClientsAFacturer() {
-    var scriptId = "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW";
+function getClientsAFacturer(returnValue) {
+	var scriptId = "MQZOaFnbhMjOOHt6VT-lierRySOfcs_yW";
 
-    // Call the Apps Script API run method
-    //   'scriptId' is the URL parameter that states what script to run
-    //   'resource' describes the run request body (with the function name
-    //              to execute)
-    gapi.client.script.scripts.run({
-        scriptId: scriptId,
-        resource: {
-            function: 'clientsAFacturer',
-            parameters: [],
-            devMode: true,
-        }
-    }).then(function (resp) {
-        var result = resp.result;
-        if (result.error && result.error.status) {
-            // The API encountered a problem before the script
-            // started executing.
-            appendPre('Error calling API:');
-            appendPre(JSON.stringify(result, null, 2));
-        } else if (result.error) {
-            // The API executed, but the script returned an error.
+	// Call the Apps Script API run method
+	//   'scriptId' is the URL parameter that states what script to run
+	//   'resource' describes the run request body (with the function name
+	//              to execute)
+	return gapi.client.script.scripts.run({
+		scriptId: scriptId,
+		resource: {
+			function: 'clientsAFacturer',
+			parameters: [],
+			devMode: true,
+		}
+	}).then(function (resp) {
+		var result = resp.result;
+		if (result.error && result.error.status) {
+			// The API encountered a problem before the script
+			// started executing.
+			appendPre('Error calling API:');
+			appendPre(JSON.stringify(result, null, 2));
+		} else if (result.error) {
+			// The API executed, but the script returned an error.
 
-            // Extract the first (and only) set of error details.
-            // The values of this object are the script's 'errorMessage' and
-            // 'errorType', and an array of stack trace elements.
-            var error = result.error.details[0];
-            appendPre('Script error message: ' + error.errorMessage);
+			// Extract the first (and only) set of error details.
+			// The values of this object are the script's 'errorMessage' and
+			// 'errorType', and an array of stack trace elements.
+			var error = result.error.details[0];
+			appendPre('Script error message: ' + error.errorMessage);
 
-            if (error.scriptStackTraceElements) {
-                // There may not be a stacktrace if the script didn't start
-                // executing.
-                appendPre('Script error stacktrace:');
-                for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
-                    var trace = error.scriptStackTraceElements[i];
-                    appendPre('\t' + trace.function + ':' + trace.lineNumber);
-                }
-            }
-        } else {
-            // The structure of the result will depend upon what the Apps
-            // Script function returns.
-            return result.response.result;
-        }
-    });
+			if (error.scriptStackTraceElements) {
+				// There may not be a stacktrace if the script didn't start
+				// executing.
+				appendPre('Script error stacktrace:');
+				for (var i = 0; i < error.scriptStackTraceElements.length; i++) {
+					var trace = error.scriptStackTraceElements[i];
+					appendPre('\t' + trace.function + ':' + trace.lineNumber);
+				}
+			}
+		} else {
+			// The structure of the result will depend upon what the Apps
+			// Script function returns.
+			returnValue.value = result.response.result;
+		}
+	});
 }
 
 function displayClients() {
-    var clients = getClientsAFacturer();
+	var returnValue = { value: null };
+	getClientsAFacturer(returnValue).then(x => {
+		var clients = returnValue.value;
 
-    if (clients != null && clients.length > 0) {
-        clients.forEach(x => {
-            var option = document.createElement("option");
-            option.text = x;
-            option.value = x;
-            cboClient.appendChild(option);
-        });
+		if (clients != null && clients.length > 0) {
+			clients.forEach(x => {
+				var option = document.createElement("option");
+				option.text = x;
+				option.value = x;
+				cboClient.appendChild(option);
+			});
 
-        cboClient.addEventListener("change", cboClientChangeHandler);
+			cboClient.addEventListener("change", cboClientChangeHandler);
 
-        cboClient.style.display = 'block';
-    }
+			cboClient.style.display = 'block';
+		}
+	});
 }
