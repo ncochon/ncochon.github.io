@@ -198,26 +198,36 @@ function afficheCours(client) {
 	var returnValue = { value: null };
 	getCoursAFacturer(client, returnValue)
 		.then(() => {
-			divCours.style.display = 'block';
-
 			var cours = returnValue.value;
 
 			if (cours != null && cours.length > 0) {
+				divCours.style.display = 'block';
+
 				cours.forEach(x => {
 					var li = document.createElement("li");
 					var textNode = document.createTextNode(x);
 					li.appendChild(textNode);
 					ulCours.appendChild(li);
 				});
+
+				btnFacturer.disabled = false;
 			}
+			else {
+				appendPre("Il n'existe pas de client à facturer");
+            }
 		});
 }
 
 function btnFacturerClickHandler() {
+	//Empeche le click multiple
+	btnFacturer.disabled = true;
+
 	var client = cboClient.value;
 	var returnValue = { value: null };
 	genereFacture(client, returnValue)
 		.then(() => {
 			appendPre("Création de la facture " + returnValue.value + " terminée");
+
+			afficheClients();
 		});
 }
