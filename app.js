@@ -1,4 +1,4 @@
-// Client ID and API key from the Developer Console
+ï»¿// Client ID and API key from the Developer Console
 var CLIENT_ID = '470606754397-1kirsg9jfpbn6o3po81kb9nk9o42n35s.apps.googleusercontent.com';
 var API_KEY = 'AIzaSyB_tnmlKQNbz9z8u8AiHgnEo7h0o5pTkiY';
 
@@ -144,12 +144,12 @@ function callScriptFunction(functionName, parameters, returnValue) {
 	});
 }
 
-//Retourne la liste des clients à facturer
+//Retourne la liste des clients Ã  facturer
 function getClientsAFacturer(returnValue) {
 	return callScriptFunction('clientsAFacturer', [], returnValue);
 }
 
-//Retourne la liste des cours à facturer pour le client
+//Retourne la liste des cours Ã  facturer pour le client
 function getCoursAFacturer(client, returnValue) {
 	return callScriptFunction('coursAFacturer', [client], returnValue);
 }
@@ -158,7 +158,7 @@ function genereFacture(client, returnValue) {
 	return callScriptFunction('genereFacture', [client], returnValue);
 }
 
-//Affiche la liste des clients à facturer
+//Affiche la liste des clients Ã  facturer
 function afficheClients() {
 	//vide la liste
 	while (cboClient.firstChild) {
@@ -213,7 +213,7 @@ function afficheCours(client) {
 				btnFacturer.disabled = false;
 			}
 			else {
-				appendPre("Il n'existe pas de client à facturer");
+				appendPre("Il n'existe pas de client Ã  facturer");
             }
 		});
 }
@@ -226,7 +226,7 @@ function btnFacturerClickHandler() {
 	var returnValue = { value: null };
 	genereFacture(client, returnValue)
 		.then(() => {
-			appendPre("Création de la facture " + returnValue.value + " terminée");
+			appendPre("CrÃ©ation de la facture " + returnValue.value + " terminÃ©e");
 
 			afficheClients();
 		});
