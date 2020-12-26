@@ -178,7 +178,7 @@ function afficheFactures() {
 					option = document.createElement("option");
 					//option.value = tab[0]
 					option.text = x;//tab[1];
-					cboClient.appendChild(option);
+					cboFacture.appendChild(option);
 				});
 			}
 		});
