@@ -168,7 +168,7 @@ function afficheFactures() {
 	var returnValue = { value: null };
 	getFacturesAEncaisser(returnValue)
 		.then(() => {
-			divFactre.style.display = 'block';
+			divFacture.style.display = 'block';
 
 			var factures = returnValue.value;
 
