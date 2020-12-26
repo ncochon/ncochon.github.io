@@ -174,10 +174,10 @@ function afficheFactures() {
 
 			if (factures != null && factures.length > 0) {
 				factures.forEach(x => {
-          const tab = x.split(";");
+					//const tab = x.split(";");
 					option = document.createElement("option");
-					option.value = tab[0]
-          option.text = tab[1];
+					//option.value = tab[0]
+					option.text = x;//tab[1];
 					cboClient.appendChild(option);
 				});
 			}
