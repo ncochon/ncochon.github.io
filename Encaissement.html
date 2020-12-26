@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Encaissement</title>
+    <meta charset="utf-8" />
+    <link href="app.css" rel="stylesheet" />
+</head>
+<body>
+    <p>Encaissement des factures</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+
+    <div id="divFacture" style="display: none;">
+        <label for="cboFacture">Facture à encaisser : </label>
+        <select id="cboFacture">
+            <option></option>
+        </select>
+    </div>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    <script type="text/javascript" src="encaissement.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+</body>
+</html>
