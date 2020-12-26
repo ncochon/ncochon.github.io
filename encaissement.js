@@ -14,7 +14,7 @@ var signoutButton = document.getElementById('signout_button');
 
 var divFacture = document.getElementById('divFacture');
 var cboFacture = document.getElementById('cboFacture');
-cboFacture.addEventListener('change', cboFactureChangeHandler);
+//cboFacture.addEventListener('change', cboFactureChangeHandler);
 
 //var btnFacturer = document.getElementById('btnFacturer');
 //btnFacturer.addEventListener('click', btnFacturerClickHandler);
@@ -156,7 +156,7 @@ function genereFacture(client, returnValue) {
 }*/
 
 //Affiche la liste des factures à encaisser
-function afficheClients() {
+function afficheFactures() {
 	//vide la liste
 	while (cboFacture.firstChild) {
 		cboFacture.removeChild(cboFacture.lastChild);
