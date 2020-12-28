@@ -1,6 +1,6 @@
 var divFacture = document.getElementById('divFacture');
 var cboFacture = document.getElementById('cboFacture');
-cboFacture.addEventListener('change', cboFactureChangeHandler);
+//cboFacture.addEventListener('change', cboFactureChangeHandler);
 
 /*var divCours = document.getElementById('divCours');
 var ulCours = document.getElementById('ulCours');
