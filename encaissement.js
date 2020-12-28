@@ -51,9 +51,9 @@ function afficheFactures() {
 			if (factures != null && factures.length > 0) {
 				factures.forEach(x => {
 					option = document.createElement("option");
-					option.value = tab[0]
-					option.text = tab[1];
-					option.moyenPaiement = tab[2];
+					option.value = x[0]
+					option.text = x[1];
+					option.moyenPaiement = x[2];
 					cboFacture.appendChild(option);
 				});
 			}
