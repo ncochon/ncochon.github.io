@@ -8,11 +8,11 @@ var ulCours = document.getElementById('ulCours');
 var btnFacturer = document.getElementById('btnFacturer');
 btnFacturer.addEventListener('click', btnFacturerClickHandler);
 */
-function onSingIn(){
+function onSignIn(){
 	afficheFactures();
 }
 
-function onSingOut(){
+function onSignOut(){
 	divFacture.style.display = 'none';
 	//divCours.style.display = 'none';
 }
