@@ -51,12 +51,12 @@ function updateSigninStatus(isSignedIn) {
 		authorizeButton.style.display = 'none';
 		//signoutButton.style.display = 'block';
 
-    onSingIn();
+		onSignIn();
 	} else {
 		authorizeButton.style.display = 'block';
 		signoutButton.style.display = 'none';
     
-    onSingOut();
+		onSignOut();
 	}
 }
 
