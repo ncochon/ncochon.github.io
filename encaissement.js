@@ -142,8 +142,8 @@ function callScriptFunction(functionName, parameters, returnValue) {
 }
 
 //Retourne la liste des factures à encaisser
-function getFacturesAEncaisser(returnValue) {
-	return callScriptFunction('facturesAEncaisser', [], returnValue);
+function getFacturesARegler(returnValue) {
+	return callScriptFunction('facturesARegler', [], returnValue);
 }
 
 //Retourne la liste des cours à facturer pour le client
@@ -155,7 +155,7 @@ function genereFacture(client, returnValue) {
 	return callScriptFunction('genereFacture', [client], returnValue);
 }*/
 
-//Affiche la liste des factures à encaisser
+//Affiche la liste des factures à régler
 function afficheFactures() {
 	//vide la liste
 	while (cboFacture.firstChild) {
@@ -166,7 +166,7 @@ function afficheFactures() {
 	cboFacture.appendChild(option);
 
 	var returnValue = { value: null };
-	getFacturesAEncaisser(returnValue)
+	getFacturesARegler(returnValue)
 		.then(() => {
 			divFacture.style.display = 'block';
 
@@ -174,10 +174,10 @@ function afficheFactures() {
 
 			if (factures != null && factures.length > 0) {
 				factures.forEach(x => {
-					const tab = x.split(";");
 					option = document.createElement("option");
 					option.value = tab[0]
 					option.text = tab[1];
+					option.moyenPaiement = tab[2];
 					cboFacture.appendChild(option);
 				});
 			}
