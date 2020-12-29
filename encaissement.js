@@ -44,10 +44,13 @@ function getFacturesARegler(returnValue) {
  * @param {boolean} payee 
  * @param {string} moyenPaiement 
  * @param {Date} dateEncaissement 
+ * @typedef {object} ReturnValue
+ * @property {object} value
+ * @param {ReturnValue} returnValue 
  */
-function enregistrePaiement(numero, payee, moyenPaiement, dateEncaissement) {
+function enregistrePaiement(numero, payee, moyenPaiement, dateEncaissement, returnValue) {
 	console.log({numero, payee, moyenPaiement, dateEncaissement});
-	return callScriptFunction('enregistrePaiement', [numero, payee, moyenPaiement, dateEncaissement]);
+	return callScriptFunction('enregistrePaiement', [numero, payee, moyenPaiement, dateEncaissement], returnValue);
 }
 
 //Affiche la liste des factures à régler
@@ -112,9 +115,15 @@ function btnEnregistrerClickHandler() {
 	const payee = chkPayee.checked;
 	const moyenPaiement = cboMoyenPaiement.value;
 	const date = new Date(dateEncaissement.value);
-	enregistrePaiement(numero, payee, moyenPaiement, date)
+	var returnValue = { value: null };
+	enregistrePaiement(numero, payee, moyenPaiement, date, returnValue)
 		.then(() => {
-			appendPre("Enregistrement du paiement de la facture " + numero + " terminé");
+			if(returnValue.value){
+				appendPre("Enregistrement du paiement de la facture " + numero + " terminé");
+			}
+			else{
+				appendPre("ERREUR lors de l'enregistrement du paiement de la facture " + numero);
+			}
 
 			afficheFactures();
 		});
