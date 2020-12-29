@@ -1,6 +1,6 @@
 var divFacture = document.getElementById('divFacture');
 var cboFacture = document.getElementById('cboFacture');
-//cboFacture.addEventListener('change', cboFactureChangeHandler);
+cboFacture.addEventListener('change', cboFactureChangeHandler);
 
 /*var divCours = document.getElementById('divCours');
 var ulCours = document.getElementById('ulCours');
@@ -59,11 +59,12 @@ function afficheFactures() {
 			}
 		});
 }
-/*
-function cboClientChangeHandler(e) {
-	afficheCours(e.target.value);
-}
 
+function cboFactureChangeHandler(e) {
+	console.log(e);
+	//afficheCours(e.target.value);
+}
+/*
 function afficheCours(client) {
 	//vide la liste
 	while (ulCours.firstChild) {
