@@ -1,35 +1,54 @@
-var divFacture = document.getElementById('divFacture');
-var cboFacture = document.getElementById('cboFacture');
+/**@type HTMLDivElement */
+const divFacture = document.getElementById('divFacture');
+/**@type HTMLSelectElement */
+const cboFacture = document.getElementById('cboFacture');
 cboFacture.addEventListener('change', cboFactureChangeHandler);
 
-/*var divCours = document.getElementById('divCours');
-var ulCours = document.getElementById('ulCours');
+/**@type HTMLDivElement */
+const divPaiement = document.getElementById('divPaiement');
+/**@type HTMLInputElement */
+const chkPayee = document.getElementById('chkPayee');
+chkPayee.addEventListener('change', enableEnregistrer);
+/**@type HTMLSelectElement */
+const cboMoyenPaiement = document.getElementById('cboMoyenPaiement');
+cboMoyenPaiement.addEventListener('change', enableEnregistrer);
+/**@type HTMLInputElement */
+const dateEncaissement = document.getElementById('dateEncaissement');
+dateEncaissement.addEventListener('change', enableEnregistrer);
+/**@type HTMLButtonElement */
+const btnEnregistrer = document.getElementById('btnEnregistrer');
+btnEnregistrer.addEventListener('click', btnEnregistrerClickHandler);
 
-var btnFacturer = document.getElementById('btnFacturer');
-btnFacturer.addEventListener('click', btnFacturerClickHandler);
-*/
-function onSignIn(){
+function onSignIn() {
 	afficheFactures();
 }
 
-function onSignOut(){
+function onSignOut() {
 	divFacture.style.display = 'none';
-	//divCours.style.display = 'none';
+	divPaiement.style.display = 'none';
 }
 
-//Retourne la liste des factures à encaisser
+/**
+ * Retourne la liste des factures à encaisser
+ * @typedef {object} ReturnValue
+ * @property {object} value
+ * @param {ReturnValue} returnValue 
+ */
 function getFacturesARegler(returnValue) {
 	return callScriptFunction('facturesARegler', [], returnValue);
 }
 
-//Retourne la liste des cours à facturer pour le client
-/*function getCoursAFacturer(client, returnValue) {
-	return callScriptFunction('coursAFacturer', [client], returnValue);
+/**
+ * Enregistre le paiement de la facture
+ * @param {string} numero 
+ * @param {boolean} payee 
+ * @param {string} moyenPaiement 
+ * @param {Date} dateEncaissement 
+ */
+function enregistrePaiement(numero, payee, moyenPaiement, dateEncaissement) {
+	console.log({numero, payee, moyenPaiement, dateEncaissement});
+	return callScriptFunction('enregistrePaiement', [numero, payee, moyenPaiement, dateEncaissement]);
 }
-
-function genereFacture(client, returnValue) {
-	return callScriptFunction('genereFacture', [client], returnValue);
-}*/
 
 //Affiche la liste des factures à régler
 function afficheFactures() {
@@ -53,58 +72,50 @@ function afficheFactures() {
 					option = document.createElement("option");
 					option.value = x[0]
 					option.text = x[1];
-					option.moyenPaiement = x[2];
+					option.payee = x[2];
+					option.moyenPaiement = x[3];
 					cboFacture.appendChild(option);
 				});
 			}
 		});
 }
 
-function cboFactureChangeHandler(e) {
-	console.log(e);
-	//afficheCours(e.target.value);
-}
-/*
-function afficheCours(client) {
-	//vide la liste
-	while (ulCours.firstChild) {
-		ulCours.removeChild(ulCours.lastChild);
-	}
-
-	var returnValue = { value: null };
-	getCoursAFacturer(client, returnValue)
-		.then(() => {
-			var cours = returnValue.value;
-
-			if (cours != null && cours.length > 0) {
-				divCours.style.display = 'block';
-
-				cours.forEach(x => {
-					var li = document.createElement("li");
-					var textNode = document.createTextNode(x);
-					li.appendChild(textNode);
-					ulCours.appendChild(li);
-				});
-
-				btnFacturer.disabled = false;
-			}
-			else {
-				appendPre("Il n'existe pas de client à facturer");
-            }
-		});
+function cboFactureChangeHandler() {
+	const option = cboFacture.selectedOptions[0];
+	const moyenPaiement = option.moyenPaiement;
+	const payee = option.payee == 'TRUE';
+	affichePaiement(payee, moyenPaiement);
 }
 
-function btnFacturerClickHandler() {
+/**
+ * Affiche les informations de paiement
+ * @param {boolean} payee 
+ * @param {string} moyenPaiement 
+ */
+function affichePaiement(payee, moyenPaiement) {
+	divPaiement.style.display = 'block';
+	chkPayee.checked = payee;
+	cboMoyenPaiement.value = moyenPaiement;
+	btnEnregistrer.disabled = true;
+}
+
+//Active le bouton d'enregistrement
+function enableEnregistrer() {
+	btnEnregistrer.disabled = false;
+}
+
+function btnEnregistrerClickHandler() {
 	//Empeche le click multiple
-	btnFacturer.disabled = true;
+	btnEnregistrer.disabled = true;
 
-	var client = cboClient.value;
-	var returnValue = { value: null };
-	genereFacture(client, returnValue)
+	const numero = cboFacture.value;
+	const payee = chkPayee.checked;
+	const moyenPaiement = cboMoyenPaiement.value;
+	const date = new Date(dateEncaissement.value);
+	enregistrePaiement(numero, payee, moyenPaiement, date)
 		.then(() => {
-			appendPre("Création de la facture " + returnValue.value + " terminée");
+			appendPre("Enregistrement du paiement de la facture " + numero + " terminé");
 
-			afficheClients();
+			afficheFactures();
 		});
 }
-*/

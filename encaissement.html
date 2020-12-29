@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Encaissement</title>
     <meta charset="utf-8" />
     <link href="app.css" rel="stylesheet" />
 </head>
+
 <body>
+    <a href="index.html">Facturation des cours</a>
     <p>Encaissement des factures</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
@@ -19,13 +22,31 @@
         </select>
     </div>
 
+    <div id="divPaiement" style="display: none;">
+        <label for="chkPayee">Payée : </label>
+        <input type="checkbox" id="chkPayee" />
+        <br />
+        <label for="cboMoyenPaiement">Moyen de paiement : </label>
+        <select id="cboMoyenPaiement">
+            <option></option>
+            <option>Chèque</option>
+            <option>Virement</option>
+            <option>Espèces</option>
+        </select>
+        <br />
+        <label for="dateEncaissement">Date d'encaissement : </label>
+        <input type="date" id="dateEncaissement" />
+        <br />
+        <button type="button" id="btnEnregistrer">Enregistrer</button>
+    </div>
+
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
     <script type="text/javascript" src="google.js"></script>
     <script type="text/javascript" src="encaissement.js"></script>
-    <script async defer src="https://apis.google.com/js/api.js"
-            onload="this.onload=function(){};handleClientLoad()"
-            onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        </script>
 </body>
+
 </html>
