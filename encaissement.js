@@ -6,9 +6,6 @@ cboFacture.addEventListener('change', cboFactureChangeHandler);
 
 /**@type HTMLDivElement */
 const divPaiement = document.getElementById('divPaiement');
-/**@type HTMLInputElement */
-const chkPayee = document.getElementById('chkPayee');
-chkPayee.addEventListener('change', enableEnregistrer);
 /**@type HTMLSelectElement */
 const cboMoyenPaiement = document.getElementById('cboMoyenPaiement');
 cboMoyenPaiement.addEventListener('change', enableEnregistrer);
@@ -41,16 +38,15 @@ function getFacturesARegler(returnValue) {
 /**
  * Enregistre le paiement de la facture
  * @param {string} numero 
- * @param {boolean} payee 
  * @param {string} moyenPaiement 
  * @param {Date} dateEncaissement 
  * @typedef {object} ReturnValue
  * @property {object} value
  * @param {ReturnValue} returnValue 
  */
-function enregistrePaiement(numero, payee, moyenPaiement, dateEncaissement, returnValue) {
-	console.log({numero, payee, moyenPaiement, dateEncaissement});
-	return callScriptFunction('enregistrePaiement', [numero, payee, moyenPaiement, dateEncaissement], returnValue);
+function enregistrePaiement(numero, moyenPaiement, dateEncaissement, returnValue) {
+	console.log({numero, moyenPaiement, dateEncaissement});
+	return callScriptFunction('enregistrePaiement', [numero, moyenPaiement, dateEncaissement], returnValue);
 }
 
 //Affiche la liste des factures à régler
@@ -75,8 +71,7 @@ function afficheFactures() {
 					option = document.createElement("option");
 					option.value = x[0]
 					option.text = x[1];
-					option.payee = x[2];
-					option.moyenPaiement = x[3];
+					option.moyenPaiement = x[2];
 					cboFacture.appendChild(option);
 				});
 			}
@@ -86,18 +81,15 @@ function afficheFactures() {
 function cboFactureChangeHandler() {
 	const option = cboFacture.selectedOptions[0];
 	const moyenPaiement = option.moyenPaiement;
-	const payee = option.payee == 'TRUE';
-	affichePaiement(payee, moyenPaiement);
+	affichePaiement(moyenPaiement);
 }
 
 /**
  * Affiche les informations de paiement
- * @param {boolean} payee 
  * @param {string} moyenPaiement 
  */
-function affichePaiement(payee, moyenPaiement) {
+function affichePaiement(moyenPaiement) {
 	divPaiement.style.display = 'block';
-	chkPayee.checked = payee;
 	cboMoyenPaiement.value = moyenPaiement;
 	btnEnregistrer.disabled = true;
 }
@@ -112,11 +104,10 @@ function btnEnregistrerClickHandler() {
 	btnEnregistrer.disabled = true;
 
 	const numero = cboFacture.value;
-	const payee = chkPayee.checked;
 	const moyenPaiement = cboMoyenPaiement.value;
 	const date = new Date(dateEncaissement.value);
 	var returnValue = { value: null };
-	enregistrePaiement(numero, payee, moyenPaiement, date, returnValue)
+	enregistrePaiement(numero, moyenPaiement, date, returnValue)
 		.then(() => {
 			if(returnValue.value){
 				appendPre("Enregistrement du paiement de la facture " + numero + " terminé");
