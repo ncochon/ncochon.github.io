@@ -3,8 +3,6 @@ function onSignIn() {
 }
 
 function onSignOut() {
-    divClient.style.display = 'none';
-    divCours.style.display = 'none';
 }
 
 function genereFactureCours(idCours, returnValue) {
