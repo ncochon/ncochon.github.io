@@ -13,6 +13,7 @@ function genere() {
     const urlParams = new URLSearchParams(window.location.search);
     const idCours = urlParams.get('idCours');
     var returnValue = { value: null };
+    appendPre("Création de la facture en cours...");
     genereFactureCours(idCours, returnValue)
         .then(() => {
             appendPre("Création de la facture " + returnValue.value + " terminée");
