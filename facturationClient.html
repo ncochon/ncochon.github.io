@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Facturation d'un client</title>
+    <meta charset="utf-8" />
+    <link href="app.css" rel="stylesheet" />
+</head>
+<body>
+    <p>Facturation d'un client</p>
+    <br/>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    <script type="text/javascript" src="google.js"></script>
+    <script type="text/javascript" src="facturationClient.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js"
+            onload="this.onload=function(){};handleClientLoad()"
+            onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+</body>
+</html>
