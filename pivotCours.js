@@ -6,32 +6,41 @@ $(function () {
 
     const cours = [];
 
-    base('Cours').select().eachPage(function page(records, fetchNextPage) {
-        records.forEach(function (record) {
-            cours.push({
-                Date: record.get('Date'),
-                Client: record.get('NomClient'),
-                Annee: record.get('AnneeCours'),
-                Mois: record.get('MoisCours'),
-                Durée: record.get('Duree'),
-                Prix: record.get('Prix'),
+    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+        .eachPage(function page(records, fetchNextPage) {
+            records.forEach(function (record) {
+                cours.push({
+                    _Date: moment(record.get('Date')).toDate(),
+                    Date: moment(record.get('Date')).format("DD/MM/YYYY HH:mm"),
+                    Client: record.get('NomClient'),
+                    Durée: record.get('Duree'),
+                    Prix: record.get('Prix'),
+                });
             });
-        });
 
-        fetchNextPage();
-    }, function done(err) {
-        if (err) { console.error(err); return; }
+            fetchNextPage();
+        }, function done(err) {
+            if (err) { console.error(err); return; }
 
-        var derivers = $.pivotUtilities.derivers;
-        var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
-        $("#output").pivotUI(cours,
-            {
-                renderers: renderers,
-                derivedAttributes: {
-                    "Prix horaire": function(mp) {
-                        return mp["Prix"] / mp["Durée"];
+            var derivers = $.pivotUtilities.derivers;
+            var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
+            $("#output").pivotUI(cours,
+                {
+                    hiddenAttributes: ["_Date"],
+                    sorters: {
+                        Date: function (x, y) {
+                            x = moment(x, "DD/MM/YYYY HH:mm");
+                            y = moment(y, "DD/MM/YYYY HH:mm");
+                            if (x.isBefore(y)) return -1;
+                            else if (x.isAfter(y)) return 1;
+                            else return 0;
+                        }
+                    },
+                    derivedAttributes: {
+                        "Prix horaire": x => x.Prix / x.Durée,
+                        Année: x => x._Date.getFullYear(),
+                        Mois: x => x._Date.getMonth() + 1,
                     }
-                }
-            });
-    });
+                });
+        });
 });
