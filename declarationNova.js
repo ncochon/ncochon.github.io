@@ -23,6 +23,37 @@ $(function () {
 
             var derivers = $.pivotUtilities.derivers;
             var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
+
+            var aggMap = {
+                'agg1': {
+                    aggType: 'Count Unique Values',
+                    arguments: ['Client'],
+                    name: 'CountUnique(Client)',
+                    varName: 'a',
+                    renderEnhancement: 'none'
+                },
+
+                'agg2': {
+                    aggType: 'Sum',
+                    arguments: ['Prix'],
+                    name: 'Sum(Prix)',
+                    varName: 'b',
+                    hidden: false,
+                    renderEnhancement: 'none'
+                },
+                'agg3': {
+                    aggType: 'Sum',
+                    arguments: ['Durée'],
+                    name: 'Sum(Durée)',
+                    varName: 'c',
+                    hidden: false,
+                    renderEnhancement: 'none'
+                }
+            };
+
+            var customAggs = {};
+            customAggs['Multifact Aggregators'] = $.pivotUtilities.multifactAggregatorGenerator(aggMap, []);
+
             $("#output").pivotUI(cours,
                 {
                     hiddenAttributes: ["_Date"],
@@ -39,7 +70,17 @@ $(function () {
                         "Prix horaire": x => x.Prix / x.Durée,
                         Année: x => x._Date.getFullYear(),
                         Mois: x => x._Date.getMonth() + 1,
-                    }
+                    },
+                    aggregators: $.extend($.pivotUtilities.aggregators, customAggs),
+                    renderers: $.extend($.pivotUtilities.renderers, $.pivotUtilities.gtRenderers),
+                    rendererOptions: {
+                        aggregations: {
+                            defaultAggregations: aggMap,
+                        }
+                    },
+                    aggregatorName: "Multifact Aggregators",
+                    rendererName: "GT Table",
+                    rows: ["Année", "Mois"]
                 });
         });
 });
