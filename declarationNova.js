@@ -5,12 +5,12 @@ $(function () {
 
     const cours = [];
 
-    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"], sort:[{field: "Date", direction: "desc"}] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
-                    _Date: moment(record.get('Date')).toDate(),
-                    Date: moment(record.get('Date')).format("DD/MM/YYYY HH:mm"),
+                    momentDate: moment(record.get('Date').replace("Z", "")),
+                    Date: moment(record.get('Date').replace("Z", "")).format("DD/MM/YYYY HH:mm"),
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
                     Prix: record.get('Prix'),
@@ -21,33 +21,22 @@ $(function () {
         }, function done(err) {
             if (err) { console.error(err); return; }
 
-            var derivers = $.pivotUtilities.derivers;
-            var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
-
             var aggMap = {
                 'agg1': {
                     aggType: 'Count Unique Values',
                     arguments: ['Client'],
-                    name: 'CountUnique(Client)',
-                    varName: 'a',
-                    renderEnhancement: 'none'
+                    name: 'Nb clients',
                 },
 
                 'agg2': {
                     aggType: 'Sum',
                     arguments: ['Prix'],
-                    name: 'Sum(Prix)',
-                    varName: 'b',
-                    hidden: false,
-                    renderEnhancement: 'none'
+                    name: 'Montant',
                 },
                 'agg3': {
                     aggType: 'Sum',
                     arguments: ['Durée'],
-                    name: 'Sum(Durée)',
-                    varName: 'c',
-                    hidden: false,
-                    renderEnhancement: 'none'
+                    name: 'Durée',
                 }
             };
 
@@ -56,7 +45,7 @@ $(function () {
 
             $("#output").pivotUI(cours,
                 {
-                    hiddenAttributes: ["_Date"],
+                    hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
                             x = moment(x, "DD/MM/YYYY HH:mm");
@@ -67,9 +56,8 @@ $(function () {
                         }
                     },
                     derivedAttributes: {
-                        "Prix horaire": x => x.Prix / x.Durée,
-                        Année: x => x._Date.getFullYear(),
-                        Mois: x => x._Date.getMonth() + 1,
+                        Année: x => x.momentDate.year(),
+                        Mois: x => x.momentDate.month() + 1,
                     },
                     aggregators: $.extend($.pivotUtilities.aggregators, customAggs),
                     renderers: $.extend($.pivotUtilities.renderers, $.pivotUtilities.gtRenderers),
@@ -80,7 +68,8 @@ $(function () {
                     },
                     aggregatorName: "Multifact Aggregators",
                     rendererName: "GT Table",
-                    rows: ["Année", "Mois"]
+                    rows: ["Année", "Mois"],
+                    rowOrder: "value_z_to_a",
                 });
         });
 });

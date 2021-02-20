@@ -5,7 +5,7 @@ $(function () {
 
     const factures = [];
 
-    base('Facture').select({ fields: ["DateEncaissement", "Client", "Montant"] })
+    base('Facture').select({ fields: ["DateEncaissement", "Client", "Montant"], sort: [{ field: "DateEncaissement", direction: "desc" }] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 factures.push({
@@ -20,12 +20,9 @@ $(function () {
         }, function done(err) {
             if (err) { console.error(err); return; }
 
-            var dataClass = $.pivotUtilities.SubtotalPivotData;
-            var renderers = $.pivotUtilities.subtotal_renderers;
-
             $("#output").pivotUI(factures,
                 {
-                    dataClass: dataClass,
+                    dataClass: $.pivotUtilities.SubtotalPivotData,
                     hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
@@ -41,8 +38,14 @@ $(function () {
                         Mois: x => x.momentDate.month() + 1,
                         Trimestre: x => "T" + x.momentDate.quarter(),
                     },
-                    renderers: renderers,
+                    renderers: $.pivotUtilities.subtotal_renderers,
                     rendererName: "Table With Subtotal",
+                    rendererOptions: {
+                        rowSubtotalDisplay: {
+                            hideOnExpand: true,
+                            collapseAt: 0
+                        },
+                    },
                     rows: ["Année", "Trimestre", "Mois"],
                     aggregatorName: "Somme",
                     vals: ["Montant"],

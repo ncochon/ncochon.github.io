@@ -9,8 +9,8 @@ $(function () {
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
-                    momentDate: moment(record.get('Date')),
-                    Date: moment(record.get('Date')).format("DD/MM/YYYY HH:mm"),
+                    momentDate: moment(record.get('Date').replace("Z", "")),
+                    Date: moment(record.get('Date').replace("Z", "")).format("DD/MM/YYYY HH:mm"),
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
                     Prix: record.get('Prix'),
