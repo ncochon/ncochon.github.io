@@ -1,19 +1,18 @@
 $(function () {
-    //Charge les données des cours
+    //Charge les données des factures
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
-    const cours = [];
+    const factures = [];
 
-    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+    base('Facture').select({ fields: ["DateEncaissement", "Client", "Montant"] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
-                cours.push({
-                    momentDate: moment(record.get('Date').replace("Z", "")),
-                    Date: moment(record.get('Date').replace("Z", "")).format("DD/MM/YYYY HH:mm"),
-                    Client: record.get('NomClient'),
-                    Durée: record.get('Duree'),
-                    Prix: record.get('Prix'),
+                factures.push({
+                    momentDate: moment(record.get('DateEncaissement')),
+                    Date: moment(record.get('DateEncaissement')).format("DD/MM/YYYY"),
+                    Client: record.get('Client'),
+                    Montant: record.get('Montant'),
                 });
             });
 
@@ -23,15 +22,15 @@ $(function () {
 
             var dataClass = $.pivotUtilities.SubtotalPivotData;
             var renderers = $.pivotUtilities.subtotal_renderers;
-            $("#output").pivotUI(cours,
+
+            $("#output").pivotUI(factures,
                 {
                     dataClass: dataClass,
-                    renderers: renderers,
                     hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
-                            x = moment(x, "DD/MM/YYYY HH:mm");
-                            y = moment(y, "DD/MM/YYYY HH:mm");
+                            x = moment(x, "DD/MM/YYYY");
+                            y = moment(y, "DD/MM/YYYY");
                             if (x.isBefore(y)) return -1;
                             else if (x.isAfter(y)) return 1;
                             else return 0;
@@ -40,11 +39,14 @@ $(function () {
                     derivedAttributes: {
                         Année: x => x.momentDate.year(),
                         Mois: x => x.momentDate.month() + 1,
+                        Trimestre: x => "T" + x.momentDate.quarter(),
                     },
+                    renderers: renderers,
                     rendererName: "Table With Subtotal",
-                    aggregatorName: "Ratio de sommes",
-                    vals: ["Prix", "Durée"],
-                    rows: ["Année", "Mois"]
-                }, false, "fr");
+                    rows: ["Année", "Trimestre", "Mois"],
+                    aggregatorName: "Somme",
+                    vals: ["Montant"],
+                },
+                false, "fr");
         });
 });

@@ -9,7 +9,7 @@ $(function () {
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
-                    _Date: moment(record.get('Date')).toDate(),
+                    momentDate: moment(record.get('Date')),
                     Date: moment(record.get('Date')).format("DD/MM/YYYY HH:mm"),
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
@@ -25,7 +25,7 @@ $(function () {
             var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
             $("#output").pivotUI(cours,
                 {
-                    hiddenAttributes: ["_Date"],
+                    hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
                             x = moment(x, "DD/MM/YYYY HH:mm");
@@ -36,9 +36,8 @@ $(function () {
                         }
                     },
                     derivedAttributes: {
-                        "Prix horaire": x => x.Prix / x.Durée,
-                        Année: x => x._Date.getFullYear(),
-                        Mois: x => x._Date.getMonth() + 1,
+                        Année: x => x.momentDate.year(),
+                        Mois: x => x.momentDate.month() + 1,
                     },
                     rendererName: "Line Chart",
                     aggregatorName: "Sum",
