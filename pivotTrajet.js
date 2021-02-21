@@ -11,8 +11,8 @@ $(function () {
                 cours.push({
                     momentDate: moment(record.get('Date').replace("Z", "")),
                     Date: moment(record.get('Date').replace("Z", "")).format("DD/MM/YYYY HH:mm"),
-                    Distance: record.get('Distance'),
-                    Durée: record.get('Duree'),
+                    Distance: record.get('Distance')/1000,
+                    Durée: record.get('Duree')/60,
                 });
             });
 
