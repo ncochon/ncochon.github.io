@@ -5,7 +5,7 @@ $(function () {
 
     const factures = [];
 
-    base('Facture').select({ fields: ["DateEncaissement", "Client", "Montant"], sort: [{ field: "DateEncaissement", direction: "desc" }] })
+    base('Facture').select({ fields: ["DateEncaissement", "Client", "Montant"], sort: [{ field: "DateEncaissement", direction: "desc" }], filterByFormula:"DateEncaissement != ''" })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 factures.push({
