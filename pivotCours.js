@@ -25,6 +25,7 @@ $(function () {
             var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
             $("#output").pivotUI(cours,
                 {
+                    dataClass: $.pivotUtilities.SubtotalPivotData,
                     hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
@@ -38,7 +39,17 @@ $(function () {
                     derivedAttributes: {
                         Année: x => x.momentDate.year(),
                         Mois: x => x.momentDate.month() + 1,
-                    }
+                    },
+                    renderers: $.pivotUtilities.subtotal_renderers,
+                    rendererName: "Table With Subtotal",
+                    rendererOptions: {
+                        rowSubtotalDisplay: {
+                            hideOnExpand: true,
+                            collapseAt: 0
+                        },
+                    },
+                    rows: ["Année", "Mois"],
+                    aggregatorName: "Nombre",
                 }, false, "fr");
         });
 });
