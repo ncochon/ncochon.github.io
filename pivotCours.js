@@ -5,7 +5,7 @@ $(function () {
 
     const cours = [];
 
-    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix", "Distance"] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
@@ -14,6 +14,7 @@ $(function () {
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
                     Prix: record.get('Prix'),
+                    Distance: record.get('Distance'),
                 });
             });
 

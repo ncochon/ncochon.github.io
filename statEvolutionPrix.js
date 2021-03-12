@@ -5,7 +5,7 @@ $(function () {
 
     const cours = [];
 
-    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix", "Distance"] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
@@ -14,6 +14,7 @@ $(function () {
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
                     Prix: record.get('Prix'),
+                    Distance: record.get('Distance'),
                 });
             });
 
@@ -21,12 +22,24 @@ $(function () {
         }, function done(err) {
             if (err) { console.error(err); return; }
 
-            var dataClass = $.pivotUtilities.SubtotalPivotData;
-            var renderers = $.pivotUtilities.subtotal_renderers;
+            var aggMap = {
+                'agg1': {
+                    aggType: 'Sum over Sum',
+                    arguments: ['Prix', 'Durée'],
+                    name: 'Prix horaire',
+                },
+                'agg2': {
+                    aggType: 'Average',
+                    arguments: ['Distance'],
+                    name: 'Distance',
+                }
+            };
+
+            var customAggs = {};
+            customAggs['Multifact Aggregators'] = $.pivotUtilities.multifactAggregatorGenerator(aggMap, []);
+
             $("#output").pivotUI(cours,
                 {
-                    dataClass: dataClass,
-                    renderers: renderers,
                     hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
@@ -41,10 +54,16 @@ $(function () {
                         Année: x => x.momentDate.year(),
                         Mois: x => x.momentDate.month() + 1,
                     },
-                    rendererName: "Table With Subtotal",
-                    aggregatorName: "Ratio de sommes",
-                    vals: ["Prix", "Durée"],
-                    rows: ["Année", "Mois"]
-                }, false, "fr");
+                    aggregators: $.extend($.pivotUtilities.aggregators, customAggs),
+                    renderers: $.extend($.pivotUtilities.renderers, $.pivotUtilities.gtRenderers),
+                    rendererOptions: {
+                        aggregations: {
+                            defaultAggregations: aggMap,
+                        }
+                    },
+                    aggregatorName: "Multifact Aggregators",
+                    rendererName: "GT Table",
+                    rows: ["Année", "Mois"],
+                });
         });
 });
