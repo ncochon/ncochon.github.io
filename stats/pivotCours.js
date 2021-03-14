@@ -5,7 +5,7 @@ $(function () {
 
     const cours = [];
 
-    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix"] })
+    base('Cours').select({ fields: ["Date", "NomClient", "Duree", "Prix", "Distance"] })
         .eachPage(function page(records, fetchNextPage) {
             records.forEach(function (record) {
                 cours.push({
@@ -14,6 +14,7 @@ $(function () {
                     Client: record.get('NomClient'),
                     Durée: record.get('Duree'),
                     Prix: record.get('Prix'),
+                    Distance: record.get('Distance'),
                 });
             });
 
@@ -25,6 +26,7 @@ $(function () {
             var renderers = $.extend($.pivotUtilities.renderers, $.pivotUtilities.plotly_renderers);
             $("#output").pivotUI(cours,
                 {
+                    dataClass: $.pivotUtilities.SubtotalPivotData,
                     hiddenAttributes: ["momentDate"],
                     sorters: {
                         Date: function (x, y) {
@@ -38,7 +40,17 @@ $(function () {
                     derivedAttributes: {
                         Année: x => x.momentDate.year(),
                         Mois: x => x.momentDate.month() + 1,
-                    }
+                    },
+                    renderers: $.pivotUtilities.subtotal_renderers,
+                    rendererName: "Table With Subtotal",
+                    rendererOptions: {
+                        rowSubtotalDisplay: {
+                            hideOnExpand: true,
+                            collapseAt: 0
+                        },
+                    },
+                    rows: ["Année", "Mois"],
+                    aggregatorName: "Nombre",
                 }, false, "fr");
         });
 });
