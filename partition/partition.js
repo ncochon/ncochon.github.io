@@ -33,7 +33,6 @@ $(function () {
     const tableFutur = $("#tableFutur").DataTable({
         dom: "<'row'<'col-12'tr>>",
         paging: false,
-        select: 'single',
         data: dataFutur,
         columns: [
             {
@@ -118,7 +117,7 @@ $(function () {
         dom: "<'row'<'col-12'tr>>",
         paging: false,
         processing: true,
-        order: [[3, 'desc']],
+        order: [[4, 'desc'], [3, 'desc'], [1, 'asc']],
         columns: [
             {
                 data: "titre",
@@ -131,6 +130,28 @@ $(function () {
             {
                 data: "niveau",
                 orderable: false,
+            },
+            {
+                data: "favorite",
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    if (type == 'display') {
+                        if (data) {
+                            return '<i class="fas fa-star text-warning"></i>';
+                        }
+                        else {
+                            return null;
+                        }
+                    }
+                    else{
+                        if (data) {
+                            return 1;
+                        }
+                        else{
+                            return 0;
+                        }
+                    }
+                },
             },
             {
                 data: "pertinence",
@@ -166,7 +187,7 @@ $(function () {
                             .filter(x => !dataFutur.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataEnCours.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataJoue.map(x => x.titre).includes(x.titre))
-                            .filter(x => x.niveau >= niveau - 1 && x.niveau <= niveau + 1)
+                            .filter(x => x.niveau >= niveau && x.niveau <= niveau + 1)
                             .map(x => ({ ...x, pertinence: pertinence(x) }));
                         callback({ data: dataProposition });
                     });
