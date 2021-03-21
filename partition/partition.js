@@ -1,7 +1,7 @@
 $(function () {
     const urlParams = new URLSearchParams(window.location.search);
-    //const idClient = urlParams.get('idClient');
-    const idClient = 'recGMIxbX0mMzLVGS';
+    const idClient = urlParams.get('idClient');
+    //const idClient = 'recGMIxbX0mMzLVGS';
 
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
