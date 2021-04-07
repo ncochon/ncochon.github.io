@@ -1,16 +1,16 @@
 $(function () {
     const urlParams = new URLSearchParams(window.location.search);
-    //const idClient = urlParams.get('idClient');
-    const idClient = 'recGMIxbX0mMzLVGS';
+    var idClient= urlParams.get('idClient');
+    if (!idClient) {
+        idClient = 'recGMIxbX0mMzLVGS';
+    }
 
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
-    var niveau;
-    var styles;
-    var dataProposition = [];
     var dataFutur = [];
     var dataEnCours = [];
+    var dataJoue = [];
 
     //Charge le client
     base('Client').find(idClient, function (err, record) {
@@ -20,8 +20,6 @@ $(function () {
         const name = record.get('Name');
         $("#clientName").text(name);
 
-        niveau = record.get('Niveau');
-        styles = record.get('Styles');
         dataFutur = tableauTitre(record.get('Partitions futures'));
         dataEnCours = tableauTitre(record.get('Partitions en cours'));
         dataJoue = tableauTitre(record.get('Partitions déjà jouées'));
@@ -107,101 +105,6 @@ $(function () {
         ]
     });
 
-    //Affichage de la modale
-    $('#modalProposition').on('show.bs.modal', function () {
-        //Charge les propositions
-        tableProposition.ajax.reload();
-    });
-
-    const tableProposition = $("#tableProposition").DataTable({
-        dom: "<'row'<'col-12'tr>>",
-        paging: false,
-        processing: true,
-        order: [[4, 'desc'], [3, 'desc'], [1, 'asc']],
-        columns: [
-            {
-                data: "titre",
-                orderable: false,
-            },
-            {
-                data: "style",
-                orderable: false,
-            },
-            {
-                data: "niveau",
-                orderable: false,
-            },
-            {
-                data: "favorite",
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    if (type == 'display') {
-                        if (data) {
-                            return '<i class="fas fa-star text-warning"></i>';
-                        }
-                        else {
-                            return null;
-                        }
-                    }
-                    else{
-                        if (data) {
-                            return 1;
-                        }
-                        else{
-                            return 0;
-                        }
-                    }
-                },
-            },
-            {
-                data: "pertinence",
-                orderable: false,
-            },
-            {
-                data: "titre",
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    return '<button class="btn btn-sm btn-outline-primary"><i class="fas fa-plus-circle"></i></button>'
-                },
-                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
-                    $(cell).find("button").click(() => {
-                        ajoute(tableFutur, dataFutur, rowData.titre);
-                        retire(tableProposition, dataProposition, rowData.titre);
-                        updateClient(dataFutur, dataEnCours, dataJoue);
-                    });
-                }
-            },
-        ],
-        createdRow: function (row, data, dataIndex, cells) {
-            if (data.pertinence < 2) {
-                $(row).addClass('table-secondary');
-            }
-        },
-        ajax: function (data, callback, settings) {
-            //Charge les propositions
-            var returnValue = { value: null };
-            if (niveau) {
-                partitions(returnValue)
-                    .then(() => {
-                        dataProposition = returnValue.value
-                            .filter(x => !dataFutur.map(x => x.titre).includes(x.titre))
-                            .filter(x => !dataEnCours.map(x => x.titre).includes(x.titre))
-                            .filter(x => !dataJoue.map(x => x.titre).includes(x.titre))
-                            .filter(x => x.niveau >= niveau && x.niveau <= niveau + 1)
-                            .map(x => ({ ...x, pertinence: pertinence(x) }));
-                        callback({ data: dataProposition });
-                    });
-            }
-        }
-    });
-
-    function pertinence(data) {
-        var p = 2;
-        if (data.niveau != niveau) p--;
-        if (!styles.includes(data.style)) p--;
-        return p;
-    }
-
     //Transforme une chaine multiligne en tableau d'objets
     function tableauTitre(texte) {
         return (texte && texte.split(String.fromCharCode(10)).filter(onlyUnique).map(x => { return { titre: x } })) || [];
@@ -245,19 +148,5 @@ $(function () {
         return self.indexOf(value) === index;
     }
 
-    $("#btnAdd").click(function () {
-        $("#modalProposition").modal("show");
-    });
-
-
-
-    function partitions(returnValue) {
-        return callScriptFunction('partitions', [], returnValue);
-    }
+    $("#btnAdd").prop("href", "proposition.html?idClient=" + idClient);
 });
-
-function onSignIn() {
-}
-
-function onSignOut() {
-}
