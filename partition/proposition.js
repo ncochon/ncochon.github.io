@@ -5,6 +5,8 @@ function onSignIn() {
         idClient = 'recGMIxbX0mMzLVGS';
     }
 
+    $("#btnClose").click(() => { location = "index.html?idClient=" + idClient });
+
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
@@ -36,7 +38,7 @@ function onSignIn() {
     });
 
     const tableProposition = $("#tableProposition").DataTable({
-        dom: "<'row'<'col-4 mt-3'f><'col-4'i>>" +
+        dom: "<'row'<'col-6'i><'col-6 mt-3'f>>" +
             "<'row'<'col-12'tr>>",
         language: {
             url: "https://cdn.datatables.net/plug-ins/1.10.24/i18n/French.json"
@@ -106,7 +108,7 @@ function onSignIn() {
         ],
         createdRow: function (row, data, dataIndex, cells) {
             if (data.pertinence < 5) {
-                $(row).addClass('table-secondary');
+                $(row).addClass('pertinence-' + data.pertinence);
             }
         },
         //data: dataProposition

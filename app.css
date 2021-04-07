@@ -1,6 +1,21 @@
-body, input, select, button {
+/* body, input, select, button {
     font-size: xx-large;
 }
 input[type=checkbox] {
     transform: scale(2);
+} */
+.pertinence-0{
+    background-color: #C8C8C8;
+}
+.pertinence-1{
+    background-color: #D3D3D3;
+}
+.pertinence-2{
+    background-color: #DCDCDC;
+}
+.pertinence-3{
+    background-color: #E8E8E8;
+}
+.pertinence-4{
+    background-color: #F5F5F5;
 }

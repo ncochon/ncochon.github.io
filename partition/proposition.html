@@ -14,17 +14,18 @@
         integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
         crossorigin="anonymous" />
     <link rel="stylesheet" href="../lib/select2-bootstrap4.min.css" />
+    <link rel="stylesheet" href="../app.css" />
 </head>
 
 <body>
-    <h2>Propositions pour <span id="clientName"></span></h2>
+    <h2><button id="btnClose" class="btn-close"></button> Propositions pour <span id="clientName"></span></h2>
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
     <pre id="content" style="white-space: pre-wrap;"></pre>
 
-    <button id="btnAdd" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Créer une partition</button>
+    <button id="btnAdd" class="btn btn-primary"><i class="fas fa-plus-circle"></i> Créer une nouvelle partition</button>
 
     <table id="tableProposition" class="table table-sm">
         <thead>
