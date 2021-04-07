@@ -92,7 +92,7 @@ $(function () {
                 data: "titre",
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-thumbs-up"></i></button>';
+                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-check-circle"></i></button>';
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
