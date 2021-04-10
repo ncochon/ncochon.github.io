@@ -61,13 +61,46 @@ function onSignIn() {
             },
             {
                 data: "style",
+                render: function (data, type, row, meta) {
+                    if (type == 'display') {
+                        if (styles.includes(data)) {
+                            return data;
+                        }
+                        else {
+                            return '<span class="badge bg-warning text-dark">' + data + '</span>'
+                        }
+
+                    }
+                    else {
+                        return data;
+                    }
+                },
             },
             {
                 data: "niveau",
+                className: "text-center",
+                render: function (data, type, row, meta) {
+                    if (data) {
+                        if (type == 'display') {
+                            switch (Math.abs(data - niveau)) {
+                                case 0: return data;
+                                case 1: return '<span class="badge bg-warning text-dark">' + data + '</span>';
+                                default: return '<span class="badge bg-danger">' + data + '</span>';
+                            }
+                        }
+                        else {
+                            return data;
+                        }
+                    }
+                    else {
+                        return '';
+                    }
+                },
             },
             {
                 data: "favorite",
                 searchable: false,
+                className: "text-center",
                 render: function (data, type, row, meta) {
                     if (type == 'display') {
                         if (data) {
@@ -89,6 +122,7 @@ function onSignIn() {
             },
             {
                 data: "pertinence",
+                className: "text-center",
             },
             {
                 data: "titre",
