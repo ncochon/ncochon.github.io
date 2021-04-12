@@ -1,6 +1,6 @@
 $(function () {
     const urlParams = new URLSearchParams(window.location.search);
-    var idClient= urlParams.get('idClient');
+    var idClient = urlParams.get('idClient');
     if (!idClient) {
         idClient = 'recGMIxbX0mMzLVGS';
     }
@@ -28,20 +28,21 @@ $(function () {
         rechargeTable(tableEnCours, dataEnCours);
     });
 
-    const tableFutur = $("#tableFutur").DataTable({
+    const tableEnCours = $("#tableEnCours").DataTable({
         dom: "<'row'<'col-12'tr>>",
         paging: false,
-        data: dataFutur,
+        data: dataEnCours,
         columns: [
             {
                 data: "titre",
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-times-circle"></i></button>';
+                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-check-circle"></i></button>';
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableFutur, dataFutur, rowData.titre);
+                        retire(tableEnCours, dataEnCours, rowData.titre);
+                        ajoute(null, dataJoue, rowData.titre);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -57,19 +58,19 @@ $(function () {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableFutur, dataFutur, rowData.titre);
-                        ajoute(tableEnCours, dataEnCours, rowData.titre);
+                        retire(tableEnCours, dataEnCours, rowData.titre);
+                        ajoute(tableFutur, dataFutur, rowData.titre);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
-            }
+            },
         ]
     });
 
-    const tableEnCours = $("#tableEnCours").DataTable({
+    const tableFutur = $("#tableFutur").DataTable({
         dom: "<'row'<'col-12'tr>>",
         paging: false,
-        data: dataEnCours,
+        data: dataFutur,
         columns: [
             {
                 data: "titre",
@@ -79,8 +80,8 @@ $(function () {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableEnCours, dataEnCours, rowData.titre);
-                        ajoute(tableFutur, dataFutur, rowData.titre);
+                        retire(tableFutur, dataFutur, rowData.titre);
+                        ajoute(tableEnCours, dataEnCours, rowData.titre);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -92,12 +93,11 @@ $(function () {
                 data: "titre",
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-check-circle"></i></button>';
+                    return '<button class="btn btn-sm btn-outline-primary"><i class="far fa-times-circle"></i></button>';
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableEnCours, dataEnCours, rowData.titre);
-                        ajoute(null, dataJoue, rowData.titre);
+                        retire(tableFutur, dataFutur, rowData.titre);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }

@@ -134,7 +134,7 @@ function onSignIn() {
                     $(cell).find("button").click(() => {
                         ajoute(dataFutur, rowData.titre);
                         updateClient(dataFutur, () => {
-                            location = "index.html";
+                            location = "index.html?idClient=" + idClient;
                         });
                     });
                 }
