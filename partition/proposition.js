@@ -64,10 +64,10 @@ function onSignIn() {
                 render: function (data, type, row, meta) {
                     if (type == 'display') {
                         if (styles.includes(data)) {
-                            return data;
+                            return '<span class="badge bg-success">' + data + '</span>';
                         }
                         else {
-                            return '<span class="badge bg-warning text-dark">' + data + '</span>'
+                            return '<span class="badge bg-warning text-dark">' + data + '</span>';
                         }
 
                     }
@@ -83,7 +83,7 @@ function onSignIn() {
                     if (data) {
                         if (type == 'display') {
                             switch (Math.abs(data - niveau)) {
-                                case 0: return data;
+                                case 0: return '<span class="badge bg-success">' + data + '</span>';
                                 case 1: return '<span class="badge bg-warning text-dark">' + data + '</span>';
                                 default: return '<span class="badge bg-danger">' + data + '</span>';
                             }
