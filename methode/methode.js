@@ -70,7 +70,7 @@ function onSignIn() {
 
                                 //Colonne avec les dates des cours
                                 for (let i = 0; i < cours.length; i++) {
-                                    $("tr").append("<th>" + (cours[i].date && moment(cours[0].date).format("DD/MM/YYYY")) + "</th>");
+                                    $("tr").append("<th>" + (cours[i].date && moment(cours[i].date).format("DD/MM/YYYY")) + "</th>");
                                 }
 
                                 //Créé les dataTables
@@ -192,50 +192,9 @@ function onSignIn() {
         return callScriptFunction('chargeMethodes', [], returnValue);
     }
 
-    //Transforme une chaine multiligne en tableau d'objets
-    function tableauTitre(texte) {
-        return (texte && texte.split(String.fromCharCode(10)).filter(onlyUnique).map(x => { return { titre: x } })) || [];
-    }
-
-    //Transforme un tableau d'objet en chaine multiligne
-    //Avec retrait des doublons
-    function concateneTitre(tableau) {
-        return tableau && tableau.map(x => x.titre).filter(onlyUnique).join(String.fromCharCode(10));
-    }
-
-    function rechargeTable(table, data) {
-        table.clear().rows.add(data).draw();
-    }
-
-    //Retire un titre de la table et de la liste
-    function retire(table, data, titre) {
-        data.splice(data.findIndex(x => x.titre == titre), 1);
-        table && rechargeTable(table, data);
-    }
-
-    //Ajoute un titre dans la table et la liste
-    function ajoute(table, data, titre) {
-        data.push({ titre: titre });
-        table && rechargeTable(table, data);
-    }
-
-    //Enregistre dans Airtable
-    function updateClient(dataFutur, dataEncours, dataJoue) {
-        base('Client').update([{
-            id: idClient,
-            fields: {
-                'Partitions futures': concateneTitre(dataFutur),
-                'Partitions en cours': concateneTitre(dataEncours),
-                'Partitions déjà jouées': concateneTitre(dataJoue),
-            }
-        }]);
-    }
-
     function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
     }
-
-    $("#btnAdd").prop("href", "proposition.html?idClient=" + idClient);
 }
 
 function onSignOut() {
