@@ -80,8 +80,9 @@ function onSignIn() {
                                     let btn = div1.children("button").text(methode.titre);
                                     let t = div2.children("table").prop("id", methode.titre);
                                     let data = methode.pieces.map(p => {
-                                        let r = new RegExp('^' + p.titre + '$', 'm');
+                                        let r = new RegExp('^' + p.id + '$', 'm');
                                         let result = {
+                                            id: p.id,
                                             lecon: p.lecon,
                                             titre: p.titre
                                         };
@@ -140,11 +141,11 @@ function onSignIn() {
                                                         let tab = (c[methode.titre] && c[methode.titre].split(String.fromCharCode(10)).filter(onlyUnique)) || [];
                                                         if (e.target.checked) {
                                                             //Ajoute la leçon
-                                                            tab.push(rowData.titre);
+                                                            tab.push(rowData.id);
                                                         }
                                                         else {
                                                             //Retire la leçon
-                                                            tab = tab.filter(titre => titre != rowData.titre);
+                                                            tab = tab.filter(id => id != rowData.id);
                                                         }
                                                         c[methode.titre] = tab.join(String.fromCharCode(10));
                                                         //Enregistre
