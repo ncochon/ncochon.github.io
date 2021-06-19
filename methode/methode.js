@@ -14,6 +14,8 @@ function onSignIn() {
     var methodes = [];
     var cours = [];
 
+    var tzo = new Date().getTimezoneOffset();
+
     //Charge les méthodes
     var methodesValue = { value: null };
     chargeMethodes(methodesValue)
@@ -29,7 +31,7 @@ function onSignIn() {
 
                 //Charge les x derniers cours du client
                 base('Cours').select({
-                    filterByFormula: 'AND({Client}="' + name + '", IS_BEFORE({Date}, NOW()))',
+                    filterByFormula: 'AND({Client}="' + name + '", IS_BEFORE(DATEADD({Date}, ' + tzo.toString() + ', "minutes"), NOW()))',
                     fields: ["Date", ...methodes.map(x => x.titre)],
                     maxRecords: NB_ANCIEN_COURS,
                     sort: [{ field: "Date", direction: "desc" }]
@@ -48,7 +50,7 @@ function onSignIn() {
 
                         //Charge le prochain cours
                         base('Cours').select({
-                            filterByFormula: 'AND({Client}="' + name + '", IS_AFTER({Date}, NOW()))',
+                            filterByFormula: 'AND({Client}="' + name + '", IS_AFTER(DATEADD({Date}, ' + tzo.toString() + ', "minutes"), NOW()))',
                             fields: ["Date", ...methodes.map(x => x.titre)],
                             maxRecords: 1,
                             sort: [{ field: "Date", direction: "asc" }]
