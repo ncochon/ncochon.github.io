@@ -1,0 +1,19 @@
+.rdv{
+    /*.position-absolute*/
+    position: absolute;
+
+    /*.border-dark*/
+    border-color: #212529;
+
+    /*.rounded*/
+    border-radius: .25rem;
+
+    /*.bg-success*/
+    background-color: rgb(25, 135, 84);
+
+    /*.text-center*/
+    text-align: center;
+
+    /*.text-white*/
+    color: white;
+}
