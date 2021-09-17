@@ -214,7 +214,7 @@ function onSignIn() {
      * @param {objet} returnValue
      */
     function trouveTrajet(adresseOrigine, adresseDestination, returnValue) {
-        return callScriptFunction('trouveTrajet', [adresseOrigine, adresseDestination], returnValue);
+        return callScriptFunction('trouveTrajetExt', [adresseOrigine, adresseDestination], returnValue);
     }
 
     //Ordonne les rdv
