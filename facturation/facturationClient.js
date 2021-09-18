@@ -5,8 +5,8 @@ function onSignIn() {
 function onSignOut() {
 }
 
-function genereFactureClient(idClient, returnValue) {
-    return callScriptFunction('genereFactureClient', [idClient], returnValue);
+function genereFactureClient(idClient) {
+    return callScriptFunction('genereFactureClient', [idClient]);
 }
 
 function genere() {
@@ -14,8 +14,8 @@ function genere() {
     const idClient = urlParams.get('idClient');
     var returnValue = { value: null };
     appendPre("Création de la facture en cours...");
-    genereFactureClient(idClient, returnValue)
-        .then(() => {
-            appendPre("Création de la facture " + returnValue.value + " terminée");
+    genereFactureClient(idClient)
+        .then(returnValue => {
+            appendPre("Création de la facture " + returnValue + " terminée");
         });
 }

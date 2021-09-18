@@ -5,7 +5,7 @@ function onSignIn() {
     var idClient = urlParams.get('idClient');
     if (!idClient) {
         //idClient = 'recGMIxbX0mMzLVGS';
-        idClient = 'rec0BYexFc3OIKXUO';
+        idClient = 'recvvQcUCY14CkMQy';
     }
 
     var Airtable = require('airtable');
@@ -17,11 +17,8 @@ function onSignIn() {
     var tzo = new Date().getTimezoneOffset();
 
     //Charge les méthodes
-    var methodesValue = { value: null };
-    chargeMethodes(methodesValue)
-        .then(() => {
-            methodes = methodesValue.value
-
+    chargeMethodes()
+        .then(methodes => {
             //Charge le client
             base('Client').find(idClient, function (err, record) {
                 if (err) { console.error(err); return; }
@@ -191,8 +188,8 @@ function onSignIn() {
             });
         });
 
-    function chargeMethodes(returnValue) {
-        return callScriptFunction('chargeMethodes', [], returnValue);
+    function chargeMethodes() {
+        return callScriptFunction('chargeMethodes', []);
     }
 
     function onlyUnique(value, index, self) {

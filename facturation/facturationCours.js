@@ -5,17 +5,16 @@ function onSignIn() {
 function onSignOut() {
 }
 
-function genereFactureCours(idCours, returnValue) {
-    return callScriptFunction('genereFactureCours', [idCours], returnValue);
+function genereFactureCours(idCours) {
+    return callScriptFunction('genereFactureCours', [idCours]);
 }
 
 function genere() {
     const urlParams = new URLSearchParams(window.location.search);
     const idCours = urlParams.get('idCours');
-    var returnValue = { value: null };
     appendPre("Création de la facture en cours...");
-    genereFactureCours(idCours, returnValue)
-        .then(() => {
-            appendPre("Création de la facture " + returnValue.value + " terminée");
+    genereFactureCours(idCours)
+        .then(returnValue => {
+            appendPre("Création de la facture " + returnValue + " terminée");
         });
 }

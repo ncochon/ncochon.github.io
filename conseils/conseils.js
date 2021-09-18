@@ -8,7 +8,6 @@ function onSignIn() {
 
     appendPre("Création du mail en cours...");
 
-    var returnValue = { value: null };
     callScriptFunction('genereMailConseil', [idClient])
         .then(() => {
             appendPre("Création du mail terminée.");

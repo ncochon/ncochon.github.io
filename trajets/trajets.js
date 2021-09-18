@@ -45,8 +45,8 @@ function onSignIn() {
         }
     });
 
-    //Liste des rdvs par jour
     /**
+     * Liste des rdvs par jour
      * @typedef {Object} Rdv
      * @property {number} jour Numéro de jour (0=Lundi, 6=Dimanche)
      * @property {number} heure Heure décimale arrondie au quart d'heure. Ex : 8.25 = 8h15
@@ -57,10 +57,20 @@ function onSignIn() {
      */
     /** @type{Rdv[]} */
     var rdvs = [];
-    var rdvLoaded = false;
+
+    /**
+     * Liste des trajets
+     * @typedef {Object} Trajet
+     * @property {number} jour Numéro de jour (0=Lundi, 6=Dimanche)
+     * @property {number} heure Heure décimale arrondie au quart d'heure. Ex : 8.25 = 8h15
+     * @property {number} duree Durée en heure décimale. Ex : 0.25 = 15 minutes
+     * @property {Object} div
+     */
+    /** @type{Trajet[]} */
+    var trajets = []
 
     //Cache des informations de trajet
-    var trajets = eval(window.localStorage.getItem("trajets")) || [];
+    //var cachetrajets = eval(window.localStorage.getItem("trajets")) || [];
 
     /**
      * Ajoute un rendez-vous sur le calendrier
@@ -141,29 +151,31 @@ function onSignIn() {
         rdvs.sort(compareRdv);
 
         for (let j = 0; j < 7; j++) {
-            let adresseDepart = adresseMaison;
-            let momentDepart = null;
+            let adresseOrigine = adresseMaison;
+            let momentFinCoursPrecedent = null;
 
             rdvs.filter(x => x.jour == j)
                 .forEach(rdv => {
-                    let momentDestination = moment().weekday(j).hour(rdv.heure).minute((rdv.heure % 1) * 60).second(0).millisecond(0);
+                    let momentDebutCours = moment().weekday(j).hour(rdv.heure).minute((rdv.heure % 1) * 60).second(0).millisecond(0);
 
                     //Teste si on fait un trajet de retour du cours précédent
-                    if (momentDepart && momentDestination.diff(momentDepart, "hour", true) > 1) {
+                    if (momentFinCoursPrecedent && momentDebutCours.diff(momentFinCoursPrecedent, "hour", true) > 1) {
                         //calcule le temps et la distance
                         let trajet = {
-                            origine: adresseDepart,
+                            origine: adresseOrigine,
                             destination: adresseMaison,
+                            jour: j,
+                            heure: momentFinCoursPrecedent.hour() + momentFinCoursPrecedent.minute() / 60,
+                            type: "D",//Départ
                             value: null
                         };
-                        trouveTrajet(adresseDepart, adresseMaison, trajet)
-                            .then(() => {
-                                console.log(trajet.origine, trajet.destination, trajet.value.duree);
+                        trouveTrajet(adresseOrigine, adresseMaison, trajet)
+                            .then(t => {
                                 //enregistre le trajet  
-                                //distanceTotale += trajet.distance;
+                                ajouteTrajet({ ...trajet, duree: t.duree, distance: t.distance });
                             });
-                        adresseDepart = adresseMaison;
-                        momentDepart = null;
+                        adresseOrigine = adresseMaison;
+                        momentFinCoursPrecedent = null;
                     }
 
                     //Trajet vers le cours
@@ -172,36 +184,40 @@ function onSignIn() {
                     //calcule le temps et la distance
                     {
                         let trajet = {
-                            origine: adresseDepart,
+                            origine: adresseOrigine,
                             destination: adresseDestination,
+                            jour: j,
+                            heure: momentDebutCours.hour() + momentDebutCours.minute() / 60,
+                            type: "A",//Arrivée
                             value: null
                         };
-                        trouveTrajet(adresseDepart, adresseDestination, trajet)
-                            .then(() => {
-                                console.log(trajet.origine, trajet.destination, trajet.value.duree);
+                        trouveTrajet(adresseOrigine, adresseDestination, trajet)
+                            .then(t => {
                                 //enregistre le trajet  
-                                //distanceTotale += trajet.distance;
+                                ajouteTrajet({ ...trajet, duree: t.duree, distance: t.distance });
                             });
                     }
 
                     //Prépare le prochain cours
-                    adresseDepart = adresseDestination;
-                    momentDepart = momentDestination.add(rdv.duree, 'hour');
+                    adresseOrigine = adresseDestination;
+                    momentFinCoursPrecedent = momentDebutCours.add(rdv.duree, 'hour');
                 });
 
             //Trajet retour
-            //calcule le temps et la distance
-            {
+            if (momentFinCoursPrecedent) {
+                //calcule le temps et la distance
                 let trajet = {
-                    origine: adresseDepart,
+                    origine: adresseOrigine,
                     destination: adresseMaison,
+                    jour: j,
+                    heure: momentFinCoursPrecedent.hour() + momentFinCoursPrecedent.minute() / 60,
+                    type: "D",
                     value: null
                 };
-                trouveTrajet(adresseDepart, adresseMaison, trajet)
-                    .then(() => {
-                        console.log(trajet.origine, trajet.destination, trajet.value.duree);
+                trouveTrajet(adresseOrigine, adresseMaison, trajet)
+                    .then(t => {
                         //enregistre le trajet  
-                        //distanceTotale += trajet.distance;
+                        ajouteTrajet({ ...trajet, duree: t.duree, distance: t.distance });
                     });
             }
         }
@@ -211,10 +227,31 @@ function onSignIn() {
      * Trouve le temps et la distance du trajet mini
      * @param {string} adresseOrigine
      * @param {string} adresseDestination
-     * @param {objet} returnValue
      */
-    function trouveTrajet(adresseOrigine, adresseDestination, returnValue) {
-        return callScriptFunction('trouveTrajetExt', [adresseOrigine, adresseDestination], returnValue);
+    function trouveTrajet(adresseOrigine, adresseDestination) {
+        //Interroge d'abord le cache
+        var trajet = window.localStorage.getItem("trajet_" + adresseOrigine + "_" + adresseDestination);
+        if (trajet) {
+            return Promise.resolve(JSON.parse(trajet));
+        }
+        else {
+            //Iterroge Google Maps
+            return callScriptFunction('trouveTrajetExt', [adresseOrigine, adresseDestination]).then(
+                trajet => {
+                    if (trajet) {
+                        //Met en cache
+                        window.localStorage.setItem("trajet_" + adresseOrigine + "_" + adresseDestination, JSON.stringify(trajet));
+                        return trajet;
+                    }
+                    else {
+                        return {
+                            duree: 15,
+                            distance: 15,
+                        }
+                    }
+                }
+            );
+        }
     }
 
     //Ordonne les rdv
@@ -222,5 +259,34 @@ function onSignIn() {
         var ordreJour = x.jour - y.jour;
         if (ordreJour) return ordreJour
         else return x.heure - y.heure;
+    }
+
+    /**
+     * Ajoute le trajet à la liste
+     * @param {Trajet} trajet 
+     */
+    function ajouteTrajet(trajet) {
+        //console.log(trajet);
+        trajets.push(trajet);
+
+        let div = $("<div />");
+        div.addClass("trajet");
+        div.css("left", $("#j" + trajet.jour).position().left);
+        div.css("width", $("#td080").css("width"));
+
+        var diff;
+        if (trajet.type == "D") {
+            diff = 0;
+        }
+        else {
+            diff = trajet.duree * 9 * 4 / 60;
+        }
+
+        div.css("top", $("#td" + trajet.jour + Math.floor(trajet.heure) + trajet.heure % 1 * 100).position().top - diff);
+        div.css("height", 9 * 4 * trajet.duree / 60);
+
+        //div.append(trajet.duree + " - " + trajet.distance);
+
+        $("table").append(div);
     }
 }

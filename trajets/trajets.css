@@ -17,3 +17,23 @@
     /*.text-white*/
     color: white;
 }
+
+.trajet{
+    /*.position-absolute*/
+    position: absolute;
+
+    /*.border-dark*/
+    border-color: #212529;
+
+    /*.rounded*/
+    border-radius: .25rem;
+
+    /*.bg-danger*/
+    background-color: rgb(220, 53, 69);
+
+    /*.text-center*/
+    text-align: center;
+
+    /*.text-white*/
+    color: white;
+}

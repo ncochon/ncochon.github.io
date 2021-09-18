@@ -149,10 +149,9 @@ function onSignIn() {
         ajax: function (data, callback, settings) {
             if (niveau) {
                 //Charge les propositions
-                var partitionValue = { value: null };
-                partitions(partitionValue)
-                    .then(() => {
-                        dataProposition = partitionValue.value
+                partitions()
+                    .then(returnValue => {
+                        dataProposition = returnValue
                             .filter(x => !dataFutur.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataEnCours.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataJoue.map(x => x.titre).includes(x.titre))
@@ -213,12 +212,12 @@ function onSignIn() {
         $("#modalPartition").modal("show");
     });
 
-    function partitions(returnValue) {
-        return callScriptFunction('partitions', [], returnValue);
+    function partitions() {
+        return callScriptFunction('partitions', []);
     }
 
-    function styles(returnValue) {
-        return callScriptFunction('styles', [], returnValue);
+    function styles() {
+        return callScriptFunction('styles', []);
     }
 
     function updatePartition(oldTitre, titre, style, niveau, favorite, returnValue) {
@@ -226,9 +225,8 @@ function onSignIn() {
     }
 
     //Liste des styles
-    var styleValue = { value: null };
-    styles(styleValue)
-        .then(() => {
+    styles()
+        .then(returnValue => {
             $("#cboStyle").select2({
                 theme: "bootstrap4",
                 width: "100%",
@@ -236,7 +234,7 @@ function onSignIn() {
                 placeholder: "",
                 minimumResultsForSearch: Infinity,
                 tags: true,
-                data: styleValue.value,
+                data: returnValue,
             });
         });
 
@@ -266,11 +264,10 @@ function onSignIn() {
 
     $("#btnSave").click(() => {
         //Enregistre dans Sheet
-        const returnValue = { value: null };
         const titre = $("#txtTitre").val();
-        updatePartition(currentData.titre, titre, $("#cboStyle").val(), $("#txtNiveau").val(), $("#chkFavorite").prop("checked"), returnValue)
-            .then(() => {
-                if (!returnValue.value) {
+        updatePartition(currentData.titre, titre, $("#cboStyle").val(), $("#txtNiveau").val(), $("#chkFavorite").prop("checked"))
+            .then(returnValue => {
+                if (!returnValue) {
                     alert("Le nouveau titre existe déjà");
                 }
                 else {
