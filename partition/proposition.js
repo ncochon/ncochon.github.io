@@ -2,7 +2,7 @@ function onSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     var idClient = urlParams.get('idClient');
     if (!idClient) {
-        idClient = 'recGMIxbX0mMzLVGS';
+        idClient = 'recd87iwjiVld6JmN';
     }
 
     $("#btnClose").click(() => { location = "index.html?idClient=" + idClient });
@@ -35,6 +35,17 @@ function onSignIn() {
 
         //Charge les propositions
         tableProposition.ajax.reload();
+    });
+
+    $("#btnAddSelected").click(() => {
+        //Ajoute tous les morceaux sélectionnés
+        $("input:checked").each(function () {
+            ajoute(dataFutur, this.titre);
+        });
+
+        updateClient(dataFutur, () => {
+            location = "index.html?idClient=" + idClient;
+        });
     });
 
     const tableProposition = $("#tableProposition").DataTable({
@@ -125,10 +136,33 @@ function onSignIn() {
                 className: "text-center",
             },
             {
+                //Coche de selection
                 data: "titre",
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<button class="btn btn-sm btn-outline-primary"><i class="fas fa-plus-circle"></i></button>'
+                    return '<input type="checkbox">'
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).find("input").change(function () {
+                        this.titre = rowData.titre;
+
+                        if ($("input:checked").length == 0) {
+                            $("#btnAddSelected").hide();
+                            $("button.add").show();
+                        }
+                        else {
+                            $("#btnAddSelected").show();
+                            $("button.add").hide();
+                        }
+                    });
+                }
+            },
+            {
+                //Bouton d'ajout direct
+                data: "titre",
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return '<button class="btn btn-sm btn-outline-primary add"><i class="fas fa-plus-circle"></i></button>'
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
