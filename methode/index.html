@@ -17,7 +17,11 @@
 
 <body>
     <h2 id="clientName"></h2>
-
+    <div id="alerteProchainCours" class="alert alert-warning alert-dismissible show" style="display: none;">
+        <strong>Aucune date n'a été définie pour le prochain cours !</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <br>Vous pouvez quand même débriefer le dernier cours.
+    </div>
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>

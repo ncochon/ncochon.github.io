@@ -60,7 +60,10 @@ function onSignIn() {
                                     cours.push(c);
                                 });
                                 //Complete si besoin
-                                if (cours.length < NB_ANCIEN_COURS + 2) cours.push({});
+                                if (cours.length < NB_ANCIEN_COURS + 2) {
+                                    cours.push({});
+                                    $("#alerteProchainCours").show();
+                                }
 
                                 //Colonne avec les dates des cours
                                 for (let i = 1; i < cours.length; i++) {
