@@ -4,14 +4,12 @@ function onSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     var idClient = urlParams.get('idClient');
     if (!idClient) {
-        //idClient = 'recGMIxbX0mMzLVGS';
-        idClient = 'recvvQcUCY14CkMQy';
+        idClient = 'recd87iwjiVld6JmN';
     }
 
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
-    var methodes = [];
     var cours = [];
 
     var tzo = new Date().getTimezoneOffset();
@@ -30,25 +28,25 @@ function onSignIn() {
                 base('Cours').select({
                     filterByFormula: 'AND({Client}="' + name + '", IS_BEFORE(DATEADD({Date}, ' + tzo.toString() + ', "minutes"), NOW()))',
                     fields: ["Date", ...methodes.map(x => x.titre)],
-                    maxRecords: NB_ANCIEN_COURS,
+                    maxRecords: NB_ANCIEN_COURS + 1,
                     sort: [{ field: "Date", direction: "desc" }]
                 })
                     .firstPage(function (err, records) {
                         if (err) { console.error(err); return; }
                         records.forEach(function (record) {
-                            let c = { date: record.get('Date') };
+                            let c = { id: record.id, date: record.get('Date') };
                             methodes.forEach(x => {
                                 c[x.titre] = record.get(x.titre);
                             });
                             cours.unshift(c);
                         });
                         //Complete si besoin
-                        while (cours.length < NB_ANCIEN_COURS) cours.unshift({});
+                        while (cours.length < NB_ANCIEN_COURS + 1) cours.unshift({});
 
-                        //Charge le prochain cours
+                        //Charge la date du prochain cours
                         base('Cours').select({
                             filterByFormula: 'AND({Client}="' + name + '", IS_AFTER(DATEADD({Date}, ' + tzo.toString() + ', "minutes"), NOW()))',
-                            fields: ["Date", ...methodes.map(x => x.titre)],
+                            fields: ["Date"],
                             maxRecords: 1,
                             sort: [{ field: "Date", direction: "asc" }]
                         })
@@ -59,16 +57,13 @@ function onSignIn() {
                                         id: record.id,
                                         date: record.get('Date')
                                     };
-                                    methodes.forEach(x => {
-                                        c[x.titre] = record.get(x.titre);
-                                    });
                                     cours.push(c);
                                 });
                                 //Complete si besoin
-                                if (cours.length < NB_ANCIEN_COURS + 1) cours.push({});
+                                if (cours.length < NB_ANCIEN_COURS + 2) cours.push({});
 
                                 //Colonne avec les dates des cours
-                                for (let i = 0; i < cours.length; i++) {
+                                for (let i = 1; i < cours.length; i++) {
                                     $("tr").append("<th>" + (cours[i].date && moment(cours[i].date).format("DD/MM/YYYY")) + "</th>");
                                 }
 
@@ -86,8 +81,8 @@ function onSignIn() {
                                             titre: p.titre
                                         };
                                         //Teste si la leçon est présente
-                                        for (let i = 0; i < cours.length; i++) {
-                                            result['cours' + i] = r.test(cours[i][methode.titre])
+                                        for (let i = 1; i < cours.length; i++) {
+                                            result['cours' + (i - 1)] = r.test(cours[i - 1][methode.titre])
                                         }
                                         return result;
                                     });
@@ -177,7 +172,7 @@ function onSignIn() {
                                         dt.scroller.toPosition(indexLecon);
                                     }
 
-                                    //Affiche/cahe la table sur clic du bouton
+                                    //Affiche/cache la table sur clic du bouton
                                     btn.click(() => {
                                         div2.toggle();
                                         dt.columns.adjust();
