@@ -1,4 +1,4 @@
-$(function () {
+function onSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     var idClient = urlParams.get('idClient');
     if (!idClient) {
@@ -23,6 +23,22 @@ $(function () {
         dataFutur = tableauTitre(record.get('Partitions futures'));
         dataEnCours = tableauTitre(record.get('Partitions en cours'));
         dataJoue = tableauTitre(record.get('Partitions déjà jouées'));
+
+        //Charge les urls des partitions
+        let titres = dataFutur.concat(dataEnCours).map(x => x.titre);
+        partitionFichiers(titres).then(returnValue => {
+            dataFutur.forEach(x => {
+                x.fichiers = returnValue[x.titre]
+            });
+            rechargeTable(tableFutur, dataFutur);
+            tableFutur.columns.adjust().draw();
+
+            dataEnCours.forEach(x => {
+                x.fichiers = returnValue[x.titre]
+            });
+            rechargeTable(tableEnCours, dataEnCours);
+            tableEnCours.columns.adjust().draw();
+        });
 
         rechargeTable(tableFutur, dataFutur);
         rechargeTable(tableEnCours, dataEnCours);
@@ -49,6 +65,17 @@ $(function () {
             },
             {
                 data: "titre",
+            },
+            {
+                data: "fichiers",
+                render: function (data, type, row, meta) {
+                    if (data) {
+                        return data.map(x => '<a href="' + x.url + '" target="_blank">' + x.nom + '</a>').join('<br/>');
+                    }
+                    else {
+                        return "";
+                    }
+                },
             },
             {
                 data: "titre",
@@ -90,6 +117,17 @@ $(function () {
                 data: "titre",
             },
             {
+                data: "fichiers",
+                render: function (data, type, row, meta) {
+                    if (data) {
+                        return data.map(x => '<a href="' + x.url + '" target="_blank">' + x.nom + '</a>').join('<br/>');
+                    }
+                    else {
+                        return "";
+                    }
+                },
+            },
+            {
                 data: "titre",
                 orderable: false,
                 render: function (data, type, row, meta) {
@@ -107,7 +145,7 @@ $(function () {
 
     //Transforme une chaine multiligne en tableau d'objets
     function tableauTitre(texte) {
-        return (texte && texte.split(String.fromCharCode(10)).filter(onlyUnique).map(x => { return { titre: x } })) || [];
+        return (texte && texte.split(String.fromCharCode(10)).filter(onlyUnique).map(x => { return { titre: x, fichier: null } })) || [];
     }
 
     //Transforme un tableau d'objet en chaine multiligne
@@ -149,4 +187,11 @@ $(function () {
     }
 
     $("#btnAdd").prop("href", "proposition.html?idClient=" + idClient);
-});
+
+    function partitionFichiers(titres) {
+        return callScriptFunction('partitionFichiers', [titres])
+    }
+}
+
+function onSignOut() {
+}

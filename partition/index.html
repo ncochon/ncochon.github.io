@@ -13,6 +13,11 @@
 </head>
 
 <body>
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
     <h2 id="clientName"></h2>
     <div class="row">
         <div class="col-6">
@@ -21,6 +26,7 @@
                     <tr>
                         <th></th>
                         <th>Partitions en cours</th>
+                        <th>Url</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -32,6 +38,7 @@
                     <tr>
                         <th></th>
                         <th>Partitions futures</th>
+                        <th>Url</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -48,8 +55,13 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.24/datatables.min.js"></script>
     <script src="../lib/airtable.browser.js"></script>
+
     <script type="text/javascript" src="partition.js"></script>
 
+    <script type="text/javascript" src="../lib/google.js"></script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        </script>
 </body>
 
 </html>

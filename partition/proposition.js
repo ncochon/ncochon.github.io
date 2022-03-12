@@ -254,8 +254,8 @@ function onSignIn() {
         return callScriptFunction('styles', []);
     }
 
-    function updatePartition(oldTitre, titre, style, niveau, favorite, returnValue) {
-        return callScriptFunction('updatePartition', [oldTitre, titre, style, niveau, favorite], returnValue);
+    function updatePartition(oldTitre, titre, style, niveau, favorite) {
+        return callScriptFunction('updatePartition', [oldTitre, titre, style, niveau, favorite]);
     }
 
     //Liste des styles
