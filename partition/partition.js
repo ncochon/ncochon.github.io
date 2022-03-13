@@ -31,13 +31,11 @@ function onSignIn() {
                 x.fichiers = returnValue[x.titre]
             });
             rechargeTable(tableFutur, dataFutur);
-            tableFutur.columns.adjust().draw();
 
             dataEnCours.forEach(x => {
                 x.fichiers = returnValue[x.titre]
             });
             rechargeTable(tableEnCours, dataEnCours);
-            tableEnCours.columns.adjust().draw();
         });
 
         rechargeTable(tableFutur, dataFutur);
@@ -57,8 +55,8 @@ function onSignIn() {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableEnCours, dataEnCours, rowData.titre);
-                        ajoute(null, dataJoue, rowData.titre);
+                        retire(tableEnCours, dataEnCours, rowData);
+                        ajoute(null, dataJoue, rowData);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -85,8 +83,8 @@ function onSignIn() {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableEnCours, dataEnCours, rowData.titre);
-                        ajoute(tableFutur, dataFutur, rowData.titre);
+                        retire(tableEnCours, dataEnCours, rowData);
+                        ajoute(tableFutur, dataFutur, rowData);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -107,8 +105,8 @@ function onSignIn() {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableFutur, dataFutur, rowData.titre);
-                        ajoute(tableEnCours, dataEnCours, rowData.titre);
+                        retire(tableFutur, dataFutur, rowData);
+                        ajoute(tableEnCours, dataEnCours, rowData);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -135,7 +133,7 @@ function onSignIn() {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
-                        retire(tableFutur, dataFutur, rowData.titre);
+                        retire(tableFutur, dataFutur, rowData);
                         updateClient(dataFutur, dataEnCours, dataJoue);
                     });
                 }
@@ -155,18 +153,19 @@ function onSignIn() {
     }
 
     function rechargeTable(table, data) {
-        table.clear().rows.add(data).draw();
+        table.clear().rows.add(data);
+        table.columns.adjust().draw();
     }
 
     //Retire un titre de la table et de la liste
-    function retire(table, data, titre) {
-        data.splice(data.findIndex(x => x.titre == titre), 1);
+    function retire(table, data, row) {
+        data.splice(data.findIndex(x => x.titre == row.titre), 1);
         table && rechargeTable(table, data);
     }
 
     //Ajoute un titre dans la table et la liste
-    function ajoute(table, data, titre) {
-        data.push({ titre: titre });
+    function ajoute(table, data, row) {
+        data.push(row);
         table && rechargeTable(table, data);
     }
 
