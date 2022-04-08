@@ -28,12 +28,16 @@ function onSignIn() {
         let titres = dataFutur.concat(dataEnCours).map(x => x.titre);
         partitionFichiers(titres).then(returnValue => {
             dataFutur.forEach(x => {
-                x.fichiers = returnValue[x.titre]
+                const info = returnValue[x.titre];
+                x.fichiers = info.fichiers;
+                x.note = info.note;
             });
             rechargeTable(tableFutur, dataFutur);
 
             dataEnCours.forEach(x => {
-                x.fichiers = returnValue[x.titre]
+                const info = returnValue[x.titre];
+                x.fichiers = info.fichiers;
+                x.note = info.note;
             });
             rechargeTable(tableEnCours, dataEnCours);
         });
@@ -63,6 +67,22 @@ function onSignIn() {
             },
             {
                 data: "titre",
+                render: function (data, type, row, meta) {
+                    var html = data;
+
+                    if (row.note) {
+                        html += ' <i class="fas fa-info-circle" data-bs-toggle="tooltip"></i>';
+                    }
+
+                    return html;
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    const $i = $(cell).find("i");
+                    if ($i[0]) {
+                        $i.prop("title", rowData.note);
+                        new bootstrap.Tooltip($i[0]);
+                    }
+                }
             },
             {
                 data: "fichiers",
@@ -113,6 +133,22 @@ function onSignIn() {
             },
             {
                 data: "titre",
+                render: function (data, type, row, meta) {
+                    var html = data;
+
+                    if (row.note) {
+                        html += ' <i class="fas fa-info-circle" data-bs-toggle="tooltip"></i>';
+                    }
+
+                    return html;
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    const $i = $(cell).find("i");
+                    if ($i[0]) {
+                        $i.prop("title", rowData.note);
+                        new bootstrap.Tooltip($i[0]);
+                    }
+                }
             },
             {
                 data: "fichiers",
