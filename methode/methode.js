@@ -107,6 +107,7 @@ function onSignIn() {
                                     }
 
                                     let dt = t.DataTable({
+                                        retrieve: true,
                                         dom: "<'row'<'col-12'tr>>",
                                         paging: true,
                                         scrollY: "400px",
@@ -193,7 +194,4 @@ function onSignIn() {
     function onlyUnique(value, index, self) {
         return self.indexOf(value) === index;
     }
-}
-
-function onSignOut() {
 }

@@ -49,6 +49,7 @@ function onSignIn() {
     });
 
     const tableProposition = $("#tableProposition").DataTable({
+        retrieve: true,
         dom: "<'row'<'col-6'i><'col-6 mt-3'f>>" +
             "<'row'<'col-12'tr>>",
         language: {
@@ -337,7 +338,4 @@ function onSignIn() {
                 }
             });
     });
-}
-
-function onSignOut() {
 }

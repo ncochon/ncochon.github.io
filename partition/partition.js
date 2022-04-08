@@ -47,6 +47,7 @@ function onSignIn() {
     });
 
     const tableEnCours = $("#tableEnCours").DataTable({
+        retrieve: true,
         dom: "<'row'<'col-12'tr>>",
         paging: false,
         data: dataEnCours,
@@ -113,6 +114,7 @@ function onSignIn() {
     });
 
     const tableFutur = $("#tableFutur").DataTable({
+        retrieve: true,
         dom: "<'row'<'col-12'tr>>",
         paging: false,
         data: dataFutur,
@@ -226,7 +228,4 @@ function onSignIn() {
     function partitionFichiers(titres) {
         return callScriptFunction('partitionFichiers', [titres])
     }
-}
-
-function onSignOut() {
 }
