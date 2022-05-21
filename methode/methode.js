@@ -6,6 +6,7 @@ function onSignIn() {
     if (!idClient) {
         idClient = 'recd87iwjiVld6JmN';
     }
+    $("#btnPartition").prop("href", "../partition/index.html?idClient=" + idClient);
 
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');

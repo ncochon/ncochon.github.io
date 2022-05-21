@@ -5,6 +5,8 @@ function onSignIn() {
         idClient = 'recGMIxbX0mMzLVGS';
     }
 
+    $("#btnMethode").prop("href", "../methode/index.html?idClient=" + idClient);
+
     var Airtable = require('airtable');
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
