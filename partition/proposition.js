@@ -57,7 +57,8 @@ function onSignIn() {
         },
         paging: false,
         processing: true,
-        order: [[4, 'desc'], [0, 'asc']],
+        //Trié par Pertinence, Favorite, Niveau, Titre
+        order: [[4, 'desc'], [3, 'asc'], [2, 'asc'], [0, 'asc']],
         columns: [
             {
                 data: "titre",
@@ -243,6 +244,11 @@ function onSignIn() {
         currentData.style = "";
         currentData.niveau = "";
         currentData.favorite = false;
+        currentData.conseil = "";
+        currentData.audio = "";
+        currentData.video = "";
+        currentData.pdf = "E:\\Mon Drive\\Violon\\";
+        currentData.commentaire = "";
 
         $("#modalPartition").modal("show");
     });
@@ -255,8 +261,8 @@ function onSignIn() {
         return callScriptFunction('styles', []);
     }
 
-    function updatePartition(oldTitre, titre, style, niveau, favorite) {
-        return callScriptFunction('updatePartition', [oldTitre, titre, style, niveau, favorite]);
+    function updatePartition(oldTitre, titre, style, niveau, favorite, conseil, audio, video, pdf, commentaire) {
+        return callScriptFunction('updatePartition', [oldTitre, titre, style, niveau, favorite, conseil, audio, video, pdf, commentaire]);
     }
 
     //Liste des styles
@@ -278,11 +284,16 @@ function onSignIn() {
         $("#cboStyle").val(currentData.style).trigger("change");
         $("#txtNiveau").val(currentData.niveau);
         $("#chkFavorite").prop("checked", currentData.favorite);
+        $("#txtConseil").val(currentData.conseil);
+        $("#txtAudio").val(currentData.audio);
+        $("#txtVideo").val(currentData.video);
+        $("#txtPdf").val(currentData.pdf);
+        $("#txtCommentaire").val(currentData.commentaire);
 
         $("#btnSave").prop("disabled", true);
     });
 
-    $("#txtTitre, #cboStyle, #txtNiveau, #chkFavorite").on("input", enableSave);
+    $("#txtTitre, #cboStyle, #txtNiveau, #chkFavorite, #txtConseil, #txtAudio, #txtVideo, #txtPdf, #txtCommentaire").on("input", enableSave);
 
     function enableSave() {
         //Valide la saisie
@@ -293,14 +304,21 @@ function onSignIn() {
             || ($("#txtTitre").val() == currentData.titre
                 && $("#cboStyle").val() == currentData.style
                 && $("#txtNiveau").val() == currentData.niveau
-                && $("#chkFavorite").prop("checked") == currentData.favorite)
+                && $("#chkFavorite").prop("checked") == currentData.favorite
+                && $("#txtConseil").val() == currentData.conseil
+                && $("#txtAudio").val() == currentData.audio
+                && $("#txtVideo").val() == currentData.video
+                && ("#txtPdf").val() == currentData.pdf
+                && $("#txtCommentaire").val() == currentData.commentaire
+            )
         );
     }
 
     $("#btnSave").click(() => {
         //Enregistre dans Sheet
         const titre = $("#txtTitre").val();
-        updatePartition(currentData.titre, titre, $("#cboStyle").val(), $("#txtNiveau").val(), $("#chkFavorite").prop("checked"))
+        updatePartition(currentData.titre, titre, $("#cboStyle").val(), $("#txtNiveau").val(), $("#chkFavorite").prop("checked"),
+            $("#txtConseil").val(), $("#txtAudio").val(), $("#txtVideo").val(), $("#txtPdf").val(), $("#txtCommentaire").val())
             .then(returnValue => {
                 if (!returnValue) {
                     alert("Le nouveau titre existe déjà");
