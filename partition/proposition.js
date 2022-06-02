@@ -308,7 +308,7 @@ function onSignIn() {
                 && $("#txtConseil").val() == currentData.conseil
                 && $("#txtAudio").val() == currentData.audio
                 && $("#txtVideo").val() == currentData.video
-                && ("#txtPdf").val() == currentData.pdf
+                && $("#txtPdf").val() == currentData.pdf
                 && $("#txtCommentaire").val() == currentData.commentaire
             )
         );
