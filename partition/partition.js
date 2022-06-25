@@ -11,6 +11,7 @@ function onSignIn() {
     var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
 
     var dataFutur = [];
+    var dataPret = [];
     var dataEnCours = [];
     var dataJoue = [];
 
@@ -23,30 +24,35 @@ function onSignIn() {
         $("#clientName").text(name);
 
         dataFutur = tableauTitre(record.get('Partitions futures'));
+        dataPret = tableauTitre(record.get('Partitions prêtes'));
         dataEnCours = tableauTitre(record.get('Partitions en cours'));
         dataJoue = tableauTitre(record.get('Partitions déjà jouées'));
 
         //Charge les urls des partitions
-        let titres = dataFutur.concat(dataEnCours).map(x => x.titre);
+        let titres = dataFutur.concat(dataPret).concat(dataEnCours).map(x => x.titre);
         partitionFichiers(titres).then(returnValue => {
-            dataFutur.forEach(x => {
-                const info = returnValue[x.titre];
-                x.fichiers = info.fichiers;
-                x.note = info.note;
-            });
+            ajouteFichiers(dataFutur, returnValue);
             rechargeTable(tableFutur, dataFutur);
 
-            dataEnCours.forEach(x => {
-                const info = returnValue[x.titre];
-                x.fichiers = info.fichiers;
-                x.note = info.note;
-            });
+            ajouteFichiers(dataPret, returnValue);
+            rechargeTable(tablePret, dataPret);
+
+            ajouteFichiers(dataEnCours, returnValue);
             rechargeTable(tableEnCours, dataEnCours);
         });
 
         rechargeTable(tableFutur, dataFutur);
+        rechargeTable(tablePret, dataPret);
         rechargeTable(tableEnCours, dataEnCours);
     });
+
+    function ajouteFichiers(data, dataFichiers){
+        data.forEach(x => {
+            const info = dataFichiers[x.titre];
+            x.fichiers = info.fichiers;
+            x.note = info.note;
+        });
+    }
 
     const tableEnCours = $("#tableEnCours").DataTable({
         retrieve: true,
@@ -64,7 +70,7 @@ function onSignIn() {
                     $(cell).find("button").click(() => {
                         retire(tableEnCours, dataEnCours, rowData);
                         ajoute(null, dataJoue, rowData);
-                        updateClient(dataFutur, dataEnCours, dataJoue);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
                     });
                 }
             },
@@ -107,8 +113,75 @@ function onSignIn() {
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
                         retire(tableEnCours, dataEnCours, rowData);
+                        ajoute(tablePret, dataPret, rowData);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
+                    });
+                }
+            },
+        ]
+    });
+
+    const tablePret = $("#tablePret").DataTable({
+        retrieve: true,
+        dom: "<'row'<'col-12'tr>>",
+        paging: false,
+        data: dataPret,
+        columns: [
+            {
+                data: "titre",
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return '<button class="btn btn-sm btn-outline-primary"><i class="fas fa-chevron-left"></i></button>';
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).find("button").click(() => {
+                        retire(tablePret, dataPret, rowData);
+                        ajoute(tableEnCours, dataEnCours, rowData);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
+                    });
+                }
+            },
+            {
+                data: "titre",
+                render: function (data, type, row, meta) {
+                    var html = data;
+
+                    if (row.note) {
+                        html += ' <i class="fas fa-info-circle" data-bs-toggle="tooltip"></i>';
+                    }
+
+                    return html;
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    const $i = $(cell).find("i");
+                    if ($i[0]) {
+                        $i.prop("title", rowData.note);
+                        new bootstrap.Tooltip($i[0]);
+                    }
+                }
+            },
+            {
+                data: "fichiers",
+                render: function (data, type, row, meta) {
+                    if (data) {
+                        return data.map(x => '<a href="' + x.url + '" target="_blank">' + x.nom + '</a>').join('<br/>');
+                    }
+                    else {
+                        return "";
+                    }
+                },
+            },
+            {
+                data: "titre",
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return '<button class="btn btn-sm btn-outline-primary"><i class="fas fa-chevron-right"></i></button>';
+                },
+                createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).find("button").click(() => {
+                        retire(tablePret, dataPret, rowData);
                         ajoute(tableFutur, dataFutur, rowData);
-                        updateClient(dataFutur, dataEnCours, dataJoue);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
                     });
                 }
             },
@@ -130,8 +203,8 @@ function onSignIn() {
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
                         retire(tableFutur, dataFutur, rowData);
-                        ajoute(tableEnCours, dataEnCours, rowData);
-                        updateClient(dataFutur, dataEnCours, dataJoue);
+                        ajoute(tablePret, dataPret, rowData);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
                     });
                 }
             },
@@ -174,7 +247,7 @@ function onSignIn() {
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("button").click(() => {
                         retire(tableFutur, dataFutur, rowData);
-                        updateClient(dataFutur, dataEnCours, dataJoue);
+                        updateClient(dataFutur, dataPret, dataEnCours, dataJoue);
                     });
                 }
             },
@@ -210,11 +283,12 @@ function onSignIn() {
     }
 
     //Enregistre dans Airtable
-    function updateClient(dataFutur, dataEncours, dataJoue) {
+    function updateClient(dataFutur, dataPret, dataEncours, dataJoue) {
         base('Client').update([{
             id: idClient,
             fields: {
                 'Partitions futures': concateneTitre(dataFutur),
+                'Partitions prêtes': concateneTitre(dataPret),
                 'Partitions en cours': concateneTitre(dataEncours),
                 'Partitions déjà jouées': concateneTitre(dataJoue),
             }
