@@ -46,11 +46,13 @@ function onSignIn() {
         rechargeTable(tableEnCours, dataEnCours);
     });
 
-    function ajouteFichiers(data, dataFichiers){
+    function ajouteFichiers(data, dataFichiers) {
         data.forEach(x => {
             const info = dataFichiers[x.titre];
-            x.fichiers = info.fichiers;
-            x.note = info.note;
+            if (info) {
+                x.fichiers = info.fichiers;
+                x.note = info.note;
+            }
         });
     }
 
