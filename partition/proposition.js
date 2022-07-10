@@ -2,7 +2,7 @@ function onSignIn() {
     const urlParams = new URLSearchParams(window.location.search);
     var idClient = urlParams.get('idClient');
     if (!idClient) {
-        idClient = 'recd87iwjiVld6JmN';
+        idClient = 'recGMIxbX0mMzLVGS';
     }
 
     $("#btnClose").click(() => { location = "index.html?idClient=" + idClient });
@@ -16,7 +16,6 @@ function onSignIn() {
     var dataFutur = [];
     var dataEnCours = [];
     var dataJoue = [];
-    var dataProposition = [];
 
     var currentData = {};
 
@@ -39,8 +38,8 @@ function onSignIn() {
 
     $("#btnAddSelected").click(() => {
         //Ajoute tous les morceaux sélectionnés
-        $("input:checked").each(function () {
-            ajoute(dataFutur, this.titre);
+        dataProposition.filter(x => x.checked).forEach(x => {
+            ajoute(dataFutur, x.titre);
         });
 
         updateClient(dataFutur, () => {
@@ -146,16 +145,14 @@ function onSignIn() {
                 },
                 createdCell: function (cell, cellData, rowData, rowIndex, colIndex) {
                     $(cell).find("input").change(function () {
-                        this.titre = rowData.titre;
+                        //Maj le modele
+                        dataProposition
+                            .find(x => x.titre == rowData.titre)
+                            .checked = this.checked;
 
-                        if ($("input:checked").length == 0) {
-                            $("#btnAddSelected").hide();
-                            $("button.add").show();
-                        }
-                        else {
-                            $("#btnAddSelected").show();
-                            $("button.add").hide();
-                        }
+                        const someChecked = dataProposition.some(x => x.checked);
+                        $("#btnAddSelected").toggle(someChecked);
+                        $("button.add").toggle(!someChecked);
                     });
                 }
             },
