@@ -14,6 +14,7 @@ function onSignIn() {
     var styles;
     var dataProposition = [];
     var dataFutur = [];
+    var dataPret = [];
     var dataEnCours = [];
     var dataJoue = [];
 
@@ -29,6 +30,7 @@ function onSignIn() {
         niveau = record.get('Niveau');
         styles = record.get('Styles');
         dataFutur = tableauTitre(record.get('Partitions futures'));
+        dataPret = tableauTitre(record.get('Partitions prêtes'));
         dataEnCours = tableauTitre(record.get('Partitions en cours'));
         dataJoue = tableauTitre(record.get('Partitions déjà jouées'));
 
@@ -186,6 +188,7 @@ function onSignIn() {
                     .then(returnValue => {
                         dataProposition = returnValue
                             .filter(x => !dataFutur.map(x => x.titre).includes(x.titre))
+                            .filter(x => !dataPret.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataEnCours.map(x => x.titre).includes(x.titre))
                             .filter(x => !dataJoue.map(x => x.titre).includes(x.titre))
                             .map(x => ({ ...x, pertinence: pertinence(x) }));
