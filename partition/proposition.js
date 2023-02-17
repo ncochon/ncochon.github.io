@@ -8,7 +8,7 @@ function onSignIn() {
     $("#btnClose").click(() => { location = "index.html?idClient=" + idClient });
 
     var Airtable = require('airtable');
-    var base = new Airtable({ apiKey: 'key5XoJsw8IpLR7OK' }).base('appYxDSaRNTNnDPPI');
+    var base = new Airtable({ apiKey: 'pat46BvQIm5vUxUCs.f2a3d86527e0ffe5583ce682abf934aae0d2fd3fb9ebb017eb89e6ca47647341' }).base('appYxDSaRNTNnDPPI');
 
     var niveau;
     var styles;
