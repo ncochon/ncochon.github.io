@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NetCMD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<body>
+    <fieldset class="mb-3">
+        <legend>PC</legend>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="pc" id="rdoAlexandre" value="Alexandre" checked>
+            <label class="form-check-label" for="rdoAlexandre">Alexandre</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="pc" id="rdoNon1" value="Non1">
+            <label class="form-check-label" for="rdoNon1">Non1</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="pc" id="rdoMarcel2" value="Marcel2">
+            <label class="form-check-label" for="rdoMarcel2">Marcel2</label>
+        </div>
+    </fieldset>
+
+    <fieldset class="mb-3">
+        <legend>Commande</legend>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="commande" id="rdoShutdown" value="Shutdown" checked>
+            <label class="form-check-label" for="rdoShutdown">Shutdown</label>
+        </div>
+        <div class="mx-0 mb-1 row align-items-center">
+            <div class="form-check col-auto">
+                <input class="form-check-input" type="radio" name="commande" id="rdoMsg" value="Msg" data-for="#txtMsg">
+                <label class="form-check-label" for="rdoMsg">Msg</label>
+            </div>
+            <div class="col px-0">
+                <input type="text" id="txtMsg" class="form-control" placeholder="Message à envoyer">
+            </div>
+        </div>
+        <div class="mx-0 row align-items-center">
+            <div class="form-check col-auto pe-0">
+                <input class="form-check-input" type="radio" name="commande" id="rdoCustom" value="Custom" data-for="#txtCustom">
+            </div>
+            <div class="col px-0">
+                <input type="text" id="txtCustom" class="form-control" placeholder="Commande à executer">
+            </div>
+        </div>
+    </fieldset>
+
+    <button type="button" id="btnEnvoyer" class="btn btn-primary">Envoyer</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+    <script src="netcmd.js"></script>
+</body>
+
+</html>
