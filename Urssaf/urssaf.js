@@ -1,12 +1,12 @@
 //Test
-const urssaf_hostname = "https://api-edi.urssaf.fr";
-const ursaff_client_id = "09a14828-81e8-41be-b2b9-e3eadc1892fd";
-const ursaff_client_secret = "90c773dd-8cae-4194-b32e-d99e918a44e2";
+// const urssaf_hostname = "https://api-edi.urssaf.fr";
+// const ursaff_client_id = "09a14828-81e8-41be-b2b9-e3eadc1892fd";
+// const ursaff_client_secret = "90c773dd-8cae-4194-b32e-d99e918a44e2";
 
 //Prod
-// const urssaf_hostname = "https://api.urssaf.fr";
-// const ursaff_client_id = "3d1f5f18-4ca9-4e54-adee-64ed75fd114f";
-// const ursaff_client_secret = "fed5ce01-f64f-4c7c-9bd9-a8f696678207";
+const urssaf_hostname = "https://api.urssaf.fr";
+const ursaff_client_id = "3d1f5f18-4ca9-4e54-adee-64ed75fd114f";
+const ursaff_client_secret = "fed5ce01-f64f-4c7c-9bd9-a8f696678207";
 const ursaff_scope = "homeplus.tiersprestations";
 
 var Airtable = require('airtable');
@@ -402,5 +402,6 @@ getAccessToken().then(token => {
         case "transmettreDemandePaiements": transmettreDemandePaiements(token, idFacture); break;
         case "majInfoDemandePaiements": majInfoDemandePaiements(token, idFacture); break;
         case "majStatutFactures": majStatutFactures(token); break;
+        default: console.log("méthode inconnue : " + method);
     }
 });
