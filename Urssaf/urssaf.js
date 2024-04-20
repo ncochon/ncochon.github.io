@@ -299,6 +299,9 @@ function transmettreFactures(token) {
 
             fetchNextPage();
         }
+        else{
+            document.writeln("Aucune facture à traiter");
+        }
     });
 }
 
@@ -393,6 +396,9 @@ function traitementUrssaf(token) {
             });
 
             fetchNextPage();
+        }
+        else{
+            document.writeln("Aucune facture à traiter");
         }
     });
 }
