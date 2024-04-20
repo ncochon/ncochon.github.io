@@ -12,6 +12,8 @@ const ursaff_scope = "homeplus.tiersprestations";
 var Airtable = require('airtable');
 var base = new Airtable({ apiKey: 'pat46BvQIm5vUxUCs.f2a3d86527e0ffe5583ce682abf934aae0d2fd3fb9ebb017eb89e6ca47647341' }).base('appYxDSaRNTNnDPPI');
 
+const MOYEN_PAIEMENT_URSSAF = "Avance Immédiate";
+
 /**
  * Obtient le jeton d'accès aux services
  */
@@ -124,7 +126,7 @@ function inscrireClient(token, idClient) {
                             fields: {
                                 IdUrssaf: output.idClient,
                                 DateUrssaf: moment().format("YYYY-MM-DD"),
-                                MoyenPaiement: "Avance Immédiate",
+                                MoyenPaiement: MOYEN_PAIEMENT_URSSAF,
                             }
                         }]);
 
@@ -284,6 +286,22 @@ function transmettreDemandePaiements(token, idFacture) {
     });
 }
 
+function transmettreFactures(token) {
+    //Charge les factures
+    base('Facture').select({
+        fields: [],
+        filterByFormula: "AND({MoyenPaiement}='" + MOYEN_PAIEMENT_URSSAF + "',{IdUrssaf}='')"
+    }).eachPage(function page(records, fetchNextPage) {
+        if (records.length) {
+            records.forEach(f => {
+                transmettreDemandePaiements(token, f.id);
+            });
+
+            fetchNextPage();
+        }
+    });
+}
+
 function majInfoDemandePaiements(token, idFacture) {
     //Charge la facture
     base('Facture').find(idFacture, function (err, record) {
@@ -363,13 +381,10 @@ function majInfoDemandePaiements(token, idFacture) {
     });
 }
 
-/**
- * Raffraichit le statut des demandes de paiement pas encore payées
- */
-function majStatutFactures(token) {
-    //Charge les factures
+function traitementUrssaf(token) {
+    //MAJ le statut des factures
     base('Facture').select({
-        fields: ["Numero", "StatutUrssaf", "Client"],
+        fields: [],
         filterByFormula: "AND({IdUrssaf}!='', {Paye}=FALSE())"
     }).eachPage(function page(records, fetchNextPage) {
         if (records.length) {
@@ -390,17 +405,24 @@ getAccessToken().then(token => {
     //Facture
     // - Transmettre + IdFacture
     // - MAJ Statut + IdFacture
-    // - MAJ Statut toutes les facture
+    
+    //Toutes les factures
+    // - Transmettre
+    // - MAJ Statut
 
     const urlParams = new URLSearchParams(window.location.search);
     const method = urlParams.get('method');
     const idClient = urlParams.get('idClient');
     const idFacture = urlParams.get('idFacture');
     switch (method) {
+        //Client
         case "inscrireClient": inscrireClient(token, idClient); break;
         case "statutClient": statutClient(token, idClient); break;
+        //Facture
         case "transmettreDemandePaiements": transmettreDemandePaiements(token, idFacture); break;
         case "majInfoDemandePaiements": majInfoDemandePaiements(token, idFacture); break;
+        //Toutes les factures
+        case "transmettreFactures": transmettreFactures(token); break;
         case "majStatutFactures": majStatutFactures(token); break;
         default: console.log("méthode inconnue : " + method);
     }
