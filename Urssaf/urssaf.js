@@ -290,7 +290,7 @@ function transmettreFactures(token) {
     //Charge les factures
     base('Facture').select({
         fields: [],
-        filterByFormula: "AND({MoyenPaiement}='" + MOYEN_PAIEMENT_URSSAF + "',{IdUrssaf}='')"
+        filterByFormula: "AND({Client}!='',{MoyenPaiement}='" + MOYEN_PAIEMENT_URSSAF + "',{IdUrssaf}='')"
     }).eachPage(function page(records, fetchNextPage) {
         if (records.length) {
             records.forEach(f => {
