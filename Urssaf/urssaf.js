@@ -384,7 +384,7 @@ function majInfoDemandePaiements(token, idFacture) {
     });
 }
 
-function traitementUrssaf(token) {
+function majStatutFactures(token) {
     //MAJ le statut des factures
     base('Facture').select({
         fields: [],
