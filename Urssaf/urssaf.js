@@ -133,7 +133,7 @@ function inscrireClient(token, idClient) {
                         document.writeln("Inscription OK");
                     }
                     else {
-                        document.writeln("Erreur lors de l'inscription : " + output?.message);
+                        document.writeln("Erreur lors de l'inscription : " + JSON.stringify(output));
                     }
                 });
     });
