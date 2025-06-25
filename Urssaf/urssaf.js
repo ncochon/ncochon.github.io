@@ -50,11 +50,11 @@ function inscrireClient(token, idClient) {
 
         //Prépare les données
         const civilite = (client.get("Titre") == "M." ? "1" : "2");
-
+        const paysNaissance = client.get("PaysNaissance").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         var codeDepartementNaissance;
         var communeNaissance;
 
-        if (client.get("PaysNaissance") == "France") {
+        if (paysNaissance == "France") {
             const codeCommuneNaissanceEntier = client.get("CodeCommuneNaissance").padStart(6, "0");
             codeDepartementNaissance = codeCommuneNaissanceEntier.substring(0, 3);
             const codeCommuneNaissance = codeCommuneNaissanceEntier.substring(3, 6);
@@ -120,7 +120,7 @@ function inscrireClient(token, idClient) {
                     console.log(output);
 
                     //Enregistre l'ID et la date
-                    if (output && output.idClient) {
+                    if (output?.idClient) {
                         base('Client').update([{
                             id: idClient,
                             fields: {
@@ -133,7 +133,7 @@ function inscrireClient(token, idClient) {
                         document.writeln("Inscription OK");
                     }
                     else {
-                        document.writeln("Erreur lors de l'inscription");
+                        document.writeln("Erreur lors de l'inscription : " + output?.message);
                     }
                 });
     });
